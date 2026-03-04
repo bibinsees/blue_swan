@@ -8,3 +8,4 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 MAX_ATTEMPTS = 3
 MODEL = "gpt-4o-mini"
 PORT = 8000
+HOST_IP = os.getenv("HOST_IP", "")

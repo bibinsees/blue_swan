@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from openai import OpenAI
 
-from config import MAX_ATTEMPTS, MODEL, OPENAI_API_KEY, PORT, TARGET_SENTENCE
+from config import HOST_IP, MAX_ATTEMPTS, MODEL, OPENAI_API_KEY, PORT, TARGET_SENTENCE
 from database import (
     create_attempt,
     create_player,
@@ -41,7 +41,7 @@ def get_local_ip():
 
 def generate_qr():
     os.makedirs("static", exist_ok=True)
-    ip = get_local_ip()
+    ip = HOST_IP if HOST_IP else get_local_ip()
     url = f"http://{ip}:{PORT}/"
     img = qrcode.make(url)
     img.save("static/qrcode.png")
@@ -203,7 +203,7 @@ async def admin_update(
 @app.get("/leaderboard", response_class=HTMLResponse)
 async def leaderboard_page(request: Request):
     leaderboard = get_leaderboard()
-    ip = get_local_ip()
+    ip = HOST_IP if HOST_IP else get_local_ip()
     return templates.TemplateResponse(
         "leaderboard.html",
         {

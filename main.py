@@ -19,7 +19,7 @@ from database import (
     get_model,
     get_player_attempts,
     get_player_by_id,
-    get_player_by_phone,
+    get_player_by_email,
     get_target_sentence,
     set_max_attempts,
     set_model,
@@ -75,15 +75,14 @@ async def register(
     request: Request,
     username: str = Form(...),
     email: str = Form(...),
-    phone: str = Form(...),
 ):
-    existing = get_player_by_phone(phone)
+    existing = get_player_by_email(email)
     if existing:
         return templates.TemplateResponse(
             "register.html",
-            {"request": request, "error": "This phone number is already registered."},
+            {"request": request, "error": "This email is already registered."},
         )
-    player_id = create_player(username, email, phone)
+    player_id = create_player(username, email)
     return RedirectResponse(url=f"/game/{player_id}", status_code=303)
 
 

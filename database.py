@@ -16,8 +16,7 @@ def init_db(default_sentence: str = ""):
         CREATE TABLE IF NOT EXISTS players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL,
-            email TEXT NOT NULL,
-            phone TEXT NOT NULL UNIQUE,
+            email TEXT NOT NULL UNIQUE,
             created_at TEXT NOT NULL
         );
 
@@ -38,6 +37,24 @@ def init_db(default_sentence: str = ""):
             value TEXT NOT NULL
         );
     """)
+    # Migration: remove phone column if it exists (recreate players table)
+    cols = [row[1] for row in conn.execute("PRAGMA table_info(players)").fetchall()]
+    if "phone" in cols:
+        conn.executescript("""
+            BEGIN;
+            CREATE TABLE IF NOT EXISTS players_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                created_at TEXT NOT NULL
+            );
+            INSERT OR IGNORE INTO players_new (id, username, email, created_at)
+                SELECT id, username, email, created_at FROM players;
+            DROP TABLE players;
+            ALTER TABLE players_new RENAME TO players;
+            COMMIT;
+        """)
+
     # Always sync config.py values to DB on startup
     if default_sentence:
         conn.execute(
@@ -75,11 +92,11 @@ def set_max_attempts(value: int):
     conn.close()
 
 
-def create_player(username, email, phone):
+def create_player(username, email):
     conn = get_conn()
     cursor = conn.execute(
-        "INSERT INTO players (username, email, phone, created_at) VALUES (?, ?, ?, ?)",
-        (username, email, phone, datetime.now(timezone.utc).isoformat()),
+        "INSERT INTO players (username, email, created_at) VALUES (?, ?, ?)",
+        (username, email, datetime.now(timezone.utc).isoformat()),
     )
     player_id = cursor.lastrowid
     conn.commit()
@@ -87,9 +104,9 @@ def create_player(username, email, phone):
     return player_id
 
 
-def get_player_by_phone(phone):
+def get_player_by_email(email):
     conn = get_conn()
-    row = conn.execute("SELECT * FROM players WHERE phone = ?", (phone,)).fetchone()
+    row = conn.execute("SELECT * FROM players WHERE email = ?", (email,)).fetchone()
     conn.close()
     return dict(row) if row else None
 

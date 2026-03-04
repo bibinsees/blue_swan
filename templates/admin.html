@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blue Schwan – Admin</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: sans-serif;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 520px;
+    }
+    h1 { font-size: 1.3rem; color: #fff; margin-bottom: 6px; }
+    .subtitle { font-size: 0.82rem; color: #555; margin-bottom: 28px; }
+    label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 8px; }
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 1rem;
+      padding: 12px 14px;
+      resize: vertical;
+      outline: none;
+      font-family: sans-serif;
+      line-height: 1.5;
+    }
+    textarea:focus { border-color: #555; }
+    button {
+      margin-top: 16px;
+      width: 100%;
+      padding: 13px;
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:active { background: #6d28d9; }
+    .success {
+      background: #1a3a1a;
+      border: 1px solid #2a6a2a;
+      color: #6aee6a;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+    .current-box {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      color: #90ee90;
+      margin-bottom: 28px;
+      font-weight: 600;
+      word-break: break-word;
+    }
+    .current-label {
+      font-size: 0.72rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 14px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 1rem;
+      outline: none;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus { border-color: #555; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #222;
+      margin: 28px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Admin — Target Sentence</h1>
+    <p class="subtitle">Changes take effect immediately for all new game sessions.</p>
+
+    {% if saved %}
+    <div class="success">Saved! New target sentence is now live.</div>
+    {% endif %}
+
+    <div class="current-label">Current sentence</div>
+    <div class="current-box">{{ current_sentence or "— not set —" }}</div>
+
+    <form method="POST" action="/admin">
+      <label for="target_sentence">Target sentence</label>
+      <textarea
+        id="target_sentence"
+        name="target_sentence"
+        required
+        placeholder="Type the exact sentence players must generate…"
+      >{{ current_sentence }}</textarea>
+
+      <hr class="divider" />
+
+      <div class="current-label">Current max attempts</div>
+      <div class="current-box">{{ current_max_attempts }}</div>
+
+      <label for="max_attempts">Max attempts per player</label>
+      <input
+        type="number"
+        id="max_attempts"
+        name="max_attempts"
+        min="1"
+        max="10"
+        required
+        value="{{ current_max_attempts }}"
+      />
+
+      <hr class="divider" />
+
+      <div class="current-label">Current model</div>
+      <div class="current-box">{{ current_model }}</div>
+
+      <label for="model">OpenAI model</label>
+      <input
+        type="text"
+        id="model"
+        name="model"
+        required
+        placeholder="e.g. gpt-4o-mini, gpt-4o, gpt-5"
+        value="{{ current_model }}"
+      />
+
+      <button type="submit">Save &amp; Go Live</button>
+    </form>
+  </div>
+</body>
+</html>

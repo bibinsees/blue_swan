@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blue Schwan – Game</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: sans-serif;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header {
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+    }
+    .header h1 { font-size: 1.2rem; color: #fff; }
+    .header .player-info { font-size: 0.8rem; color: #666; margin-top: 2px; }
+
+    .target-box {
+      max-width: 600px;
+      margin: 0 auto 24px auto;
+      background: #1a2a1a;
+      border: 1px solid #2a4a2a;
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .target-box .label {
+      font-size: 0.72rem;
+      color: #6a9a6a;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .target-box .sentence {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #90ee90;
+      line-height: 1.5;
+    }
+
+    .attempts-section {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .attempts-section h2 {
+      font-size: 0.8rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    .attempt-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .attempt-card.exact {
+      border-color: #2a6a2a;
+      background: #141f14;
+    }
+    .attempt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .attempt-num {
+      font-size: 0.75rem;
+      color: #888;
+      font-weight: 600;
+    }
+    .badge {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .badge.match { background: #1a4a1a; color: #6aee6a; }
+    .badge.no-match { background: #3a1a1a; color: #ee6a6a; }
+
+    .attempt-row {
+      margin-bottom: 8px;
+    }
+    .attempt-row .row-label {
+      font-size: 0.7rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 3px;
+    }
+    .attempt-row .row-value {
+      font-size: 0.85rem;
+      color: #ccc;
+      background: #111;
+      border-radius: 6px;
+      padding: 8px 10px;
+      word-break: break-word;
+      white-space: pre-wrap;
+      line-height: 1.4;
+    }
+    .tokens-badge {
+      display: inline-block;
+      background: #1a2a3a;
+      color: #6ab4ee;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .prompt-section {
+      max-width: 600px;
+      margin: 24px auto 0 auto;
+    }
+    .attempts-counter {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 12px;
+    }
+    .attempts-counter span { color: #f0f0f0; font-weight: 600; }
+    .model-indicator {
+      font-size: 0.75rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .model-indicator span {
+      color: #a78bfa;
+      font-weight: 600;
+    }
+    .model-badge {
+      display: inline-block;
+      background: #1e1a2e;
+      color: #a78bfa;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+      padding: 12px 14px;
+      resize: vertical;
+      outline: none;
+      font-family: sans-serif;
+      line-height: 1.5;
+    }
+    textarea:focus { border-color: #555; }
+    textarea:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    button#submit-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 13px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button#submit-btn:disabled {
+      background: #1a1a3a;
+      color: #444;
+      cursor: not-allowed;
+    }
+    button#submit-btn:active:not(:disabled) { background: #1d4ed8; }
+
+    .done-msg {
+      background: #1a1a2a;
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      margin-top: 14px;
+    }
+
+    .spinner {
+      display: none;
+      text-align: center;
+      color: #555;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+    .spinner.show { display: block; }
+
+    .error-msg {
+      background: #3a1010;
+      border: 1px solid #7a2020;
+      color: #f88;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Blue Schwan Challenge</h1>
+    <div class="player-info">Playing as: <strong>{{ player.username }}</strong></div>
+  </div>
+
+  <div class="target-box">
+    <div class="label">Generate this sentence exactly:</div>
+    <div class="sentence">{{ target_sentence }}</div>
+  </div>
+
+  <div class="attempts-section">
+    <h2>Your Attempts</h2>
+    <div id="attempts-list">
+      {% for a in attempts %}
+      <div class="attempt-card {% if a.is_exact_match %}exact{% endif %}">
+        <div class="attempt-header">
+          <span class="attempt-num">Attempt {{ a.attempt_number }}</span>
+          {% if a.is_exact_match %}
+            <span class="badge match">Exact Match</span>
+          {% else %}
+            <span class="badge no-match">No Match</span>
+          {% endif %}
+        </div>
+        <div class="attempt-row">
+          <div class="row-label">Your Prompt</div>
+          <div class="row-value">{{ a.prompt_text }}</div>
+        </div>
+        <div class="attempt-row">
+          <div class="row-label">LLM Response</div>
+          <div class="row-value">{{ a.llm_response }}</div>
+        </div>
+        <div class="attempt-row">
+          <div class="row-label">Input Tokens</div>
+          <div><span class="tokens-badge">{{ a.input_tokens }} tokens</span></div>
+        </div>
+        {% if a.model_used %}
+        <div class="attempt-row">
+          <div class="row-label">Model</div>
+          <div><span class="model-badge">{{ a.model_used }}</span></div>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="prompt-section">
+    {% set remaining = max_attempts - attempts_used %}
+    {% if remaining > 0 %}
+    <div class="attempts-counter">
+      Attempts remaining: <span id="remaining-count">{{ remaining }}</span> / {{ max_attempts }}
+    </div>
+    <div class="model-indicator">Model: <span id="model-name">{{ current_model }}</span></div>
+    <textarea id="prompt-input" placeholder="Type your prompt here…"></textarea>
+    <div class="error-msg" id="error-msg"></div>
+    <div class="spinner" id="spinner">Sending to <span id="spinner-model">{{ current_model }}</span>…</div>
+    <button id="submit-btn">Submit Prompt</button>
+    {% else %}
+    <div class="done-msg">You've used all {{ max_attempts }} attempts. Check the leaderboard!</div>
+    {% endif %}
+  </div>
+
+  <script>
+    const PLAYER_ID = {{ player.id }};
+    let attemptsUsed = {{ attempts_used }};
+    const MAX_ATTEMPTS = {{ max_attempts }};
+
+    const submitBtn = document.getElementById("submit-btn");
+    const promptInput = document.getElementById("prompt-input");
+    const attemptsList = document.getElementById("attempts-list");
+    const spinner = document.getElementById("spinner");
+    const errorMsg = document.getElementById("error-msg");
+    const remainingCount = document.getElementById("remaining-count");
+
+    if (submitBtn) {
+      submitBtn.addEventListener("click", async () => {
+        const text = promptInput.value.trim();
+        if (!text) return;
+
+        submitBtn.disabled = true;
+        promptInput.disabled = true;
+        spinner.classList.add("show");
+        errorMsg.style.display = "none";
+
+        try {
+          const form = new FormData();
+          form.append("player_id", PLAYER_ID);
+          form.append("prompt_text", text);
+
+          const res = await fetch("/attempt", { method: "POST", body: form });
+          const data = await res.json();
+
+          if (data.error) {
+            errorMsg.textContent = data.error;
+            errorMsg.style.display = "block";
+            submitBtn.disabled = false;
+            promptInput.disabled = false;
+            return;
+          }
+
+          attemptsUsed++;
+
+          // Build attempt card
+          const card = document.createElement("div");
+          card.className = "attempt-card" + (data.is_exact_match ? " exact" : "");
+          card.innerHTML = `
+            <div class="attempt-header">
+              <span class="attempt-num">Attempt ${data.attempt_number}</span>
+              <span class="badge ${data.is_exact_match ? "match" : "no-match"}">
+                ${data.is_exact_match ? "Exact Match" : "No Match"}
+              </span>
+            </div>
+            <div class="attempt-row">
+              <div class="row-label">Your Prompt</div>
+              <div class="row-value">${escapeHtml(text)}</div>
+            </div>
+            <div class="attempt-row">
+              <div class="row-label">LLM Response</div>
+              <div class="row-value">${escapeHtml(data.llm_response)}</div>
+            </div>
+            <div class="attempt-row">
+              <div class="row-label">Input Tokens</div>
+              <div><span class="tokens-badge">${data.input_tokens} tokens</span></div>
+            </div>
+            <div class="attempt-row">
+              <div class="row-label">Model</div>
+              <div><span class="model-badge">${escapeHtml(data.model_used)}</span></div>
+            </div>
+          `;
+          // Update model indicator in case admin changed it
+          const modelName = document.getElementById("model-name");
+          const spinnerModel = document.getElementById("spinner-model");
+          if (modelName) modelName.textContent = data.model_used;
+          if (spinnerModel) spinnerModel.textContent = data.model_used;
+          attemptsList.appendChild(card);
+          card.scrollIntoView({ behavior: "smooth", block: "start" });
+
+          promptInput.value = "";
+
+          if (data.attempts_remaining > 0) {
+            promptInput.disabled = false;
+            submitBtn.disabled = false;
+            remainingCount.textContent = data.attempts_remaining;
+          } else {
+            // No more attempts
+            const section = document.querySelector(".prompt-section");
+            section.innerHTML = `<div class="done-msg">You've used all ${MAX_ATTEMPTS} attempts. Check the leaderboard!</div>`;
+          }
+
+        } catch (e) {
+          errorMsg.textContent = "Something went wrong. Please try again.";
+          errorMsg.style.display = "block";
+          submitBtn.disabled = false;
+          promptInput.disabled = false;
+        } finally {
+          spinner.classList.remove("show");
+        }
+      });
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+  </script>
+</body>
+</html>

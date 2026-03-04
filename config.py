@@ -1,0 +1,10 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+TARGET_SENTENCE = "Blue Schwan fliegt von Neuschwanstein nach Schweinfurt."
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+MAX_ATTEMPTS = 3
+MODEL = "gpt-4o-mini"
+PORT = 8000

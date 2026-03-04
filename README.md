@@ -29,10 +29,11 @@ code is written such a way that server connection only works if the laptop's hot
 
 Tasks to be done 
 more rules:
-0. cant use the same username and email_id
+
 1. make time out ie max time 2 minutes, after that automatically kill the process.
 2. if its tie with token number use time used less.
-3. ad conition in UI that cant use the same verb.
+3. ad conition in UI that cant use the same verb. also precheck if they used before passing the input to llm.
 4. show the prompts worked in the leader board. but hide it only shows 
 5. turn the ui into cairo theme.
+6. more closer means cosine distance calc need to be done. 
 

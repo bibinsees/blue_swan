@@ -69,6 +69,12 @@
       color: #555;
       margin-bottom: 28px;
     }
+    .time-cell {
+      text-align: right;
+      font-size: 0.9rem;
+      color: #888;
+      font-weight: 500;
+    }
 
     .empty-msg {
       color: #444;
@@ -159,6 +165,7 @@
               <th>#</th>
               <th>Player</th>
               <th style="text-align:right">Best Tokens</th>
+              <th style="text-align:right">Time</th>
             </tr>
           </thead>
           <tbody>
@@ -167,6 +174,7 @@
               <td class="rank-cell rank-{{ row.rank }}">{{ row.rank }}</td>
               <td class="username-cell">{{ row.username }}</td>
               <td class="tokens-cell">{{ row.best_tokens }}<span class="unit">tokens</span></td>
+              <td class="time-cell">{{ row.time_seconds }}s</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -182,8 +190,10 @@
   </div>
 
   <script>
-    function fmt(ts) {
-      return new Date(ts).toLocaleTimeString();
+    function fmtTime(s) {
+      if (s === null || s === undefined) return "—";
+      if (s < 60) return s + "s";
+      return Math.floor(s / 60) + "m " + (s % 60) + "s";
     }
 
     async function refresh() {
@@ -201,6 +211,7 @@
               <td class="rank-cell rank-${row.rank}">${row.rank}</td>
               <td class="username-cell">${escapeHtml(row.username)}</td>
               <td class="tokens-cell">${row.best_tokens}<span class="unit">tokens</span></td>
+              <td class="time-cell">${fmtTime(row.time_seconds)}</td>
             </tr>
           `).join("");
 
@@ -211,6 +222,7 @@
                   <th>#</th>
                   <th>Player</th>
                   <th style="text-align:right">Best Tokens</th>
+                  <th style="text-align:right">Time</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>

@@ -1,6 +1,7 @@
 import os
 import socket
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 
 import qrcode
 import uvicorn
@@ -20,6 +21,8 @@ from database import (
     get_player_attempts,
     get_player_by_id,
     get_player_by_email,
+    get_player_by_username,
+    player_has_exact_match,
     get_target_sentence,
     set_max_attempts,
     set_model,
@@ -76,8 +79,12 @@ async def register(
     username: str = Form(...),
     email: str = Form(...),
 ):
-    existing = get_player_by_email(email)
-    if existing:
+    if get_player_by_username(username):
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "This username is already taken."},
+        )
+    if get_player_by_email(email):
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error": "This email is already registered."},
@@ -104,6 +111,7 @@ async def game_page(request: Request, player_id: int):
             "max_attempts": get_max_attempts(),
             "attempts_used": len(attempts),
             "current_model": get_model(),
+            "has_exact_match": player_has_exact_match(player_id),
         },
     )
 
@@ -118,6 +126,8 @@ async def make_attempt(
         raise HTTPException(status_code=404, detail="Player not found")
 
     attempts = get_player_attempts(player_id)
+    if player_has_exact_match(player_id):
+        return JSONResponse({"error": "You already got an exact match!"}, status_code=400)
     if len(attempts) >= get_max_attempts():
         return JSONResponse({"error": "Maximum attempts reached."}, status_code=400)
 
@@ -134,6 +144,7 @@ async def make_attempt(
     is_exact_match = llm_response.strip() == get_target_sentence()
     attempt_number = len(attempts) + 1
     model_used = get_model()
+    now = datetime.now(timezone.utc)
 
     create_attempt(
         player_id=player_id,
@@ -147,6 +158,14 @@ async def make_attempt(
 
     attempts_remaining = get_max_attempts() - attempt_number
 
+    time_seconds = None
+    if is_exact_match:
+        try:
+            start = datetime.fromisoformat(player["created_at"])
+            time_seconds = max(0, int((now - start).total_seconds()))
+        except Exception:
+            time_seconds = 0
+
     return JSONResponse(
         {
             "llm_response": llm_response,
@@ -155,6 +174,7 @@ async def make_attempt(
             "attempt_number": attempt_number,
             "attempts_remaining": attempts_remaining,
             "model_used": model_used,
+            "time_seconds": time_seconds,
         }
     )
 

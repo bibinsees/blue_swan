@@ -261,8 +261,14 @@
   </div>
 
   <div class="prompt-section">
+    {% if has_exact_match %}
+    <div class="done-msg" style="border-color:#2a6a2a; background:#141f14; color:#6aee6a;">
+      You got an exact match! Your score is on the leaderboard.
+    </div>
+    {% elif attempts_used >= max_attempts %}
+    <div class="done-msg">You've used all {{ max_attempts }} attempts. Check the leaderboard!</div>
+    {% else %}
     {% set remaining = max_attempts - attempts_used %}
-    {% if remaining > 0 %}
     <div class="attempts-counter">
       Attempts remaining: <span id="remaining-count">{{ remaining }}</span> / {{ max_attempts }}
     </div>
@@ -271,8 +277,6 @@
     <div class="error-msg" id="error-msg"></div>
     <div class="spinner" id="spinner">Sending to <span id="spinner-model">{{ current_model }}</span>…</div>
     <button id="submit-btn">Submit Prompt</button>
-    {% else %}
-    <div class="done-msg">You've used all {{ max_attempts }} attempts. Check the leaderboard!</div>
     {% endif %}
   </div>
 
@@ -353,12 +357,17 @@
 
           promptInput.value = "";
 
-          if (data.attempts_remaining > 0) {
+          if (data.is_exact_match) {
+            const section = document.querySelector(".prompt-section");
+            const timeStr = (data.time_seconds !== null && data.time_seconds !== undefined)
+              ? ` in ${data.time_seconds < 60 ? data.time_seconds + "s" : Math.floor(data.time_seconds/60) + "m " + (data.time_seconds%60) + "s"}`
+              : "";
+            section.innerHTML = `<div class="done-msg" style="border-color:#2a6a2a;background:#141f14;color:#6aee6a;">You got an exact match${timeStr}! Your score is on the leaderboard.</div>`;
+          } else if (data.attempts_remaining > 0) {
             promptInput.disabled = false;
             submitBtn.disabled = false;
             remainingCount.textContent = data.attempts_remaining;
           } else {
-            // No more attempts
             const section = document.querySelector(".prompt-section");
             section.innerHTML = `<div class="done-msg">You've used all ${MAX_ATTEMPTS} attempts. Check the leaderboard!</div>`;
           }

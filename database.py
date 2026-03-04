@@ -15,7 +15,7 @@ def init_db(default_sentence: str = ""):
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
+            username TEXT NOT NULL UNIQUE,
             email TEXT NOT NULL UNIQUE,
             created_at TEXT NOT NULL
         );
@@ -54,6 +54,13 @@ def init_db(default_sentence: str = ""):
             ALTER TABLE players_new RENAME TO players;
             COMMIT;
         """)
+
+    # Migration: add unique index on username if not already present
+    try:
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_players_username ON players(username)")
+        conn.commit()
+    except Exception:
+        pass
 
     # Always sync config.py values to DB on startup
     if default_sentence:
@@ -104,6 +111,13 @@ def create_player(username, email):
     return player_id
 
 
+def get_player_by_username(username):
+    conn = get_conn()
+    row = conn.execute("SELECT * FROM players WHERE username = ?", (username,)).fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
 def get_player_by_email(email):
     conn = get_conn()
     row = conn.execute("SELECT * FROM players WHERE email = ?", (email,)).fetchone()
@@ -137,6 +151,16 @@ def create_attempt(player_id, attempt_number, prompt_text, input_tokens, llm_res
     )
     conn.commit()
     conn.close()
+
+
+def player_has_exact_match(player_id) -> bool:
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT 1 FROM attempts WHERE player_id = ? AND is_exact_match = 1 LIMIT 1",
+        (player_id,),
+    ).fetchone()
+    conn.close()
+    return row is not None
 
 
 def get_player_attempts(player_id):
@@ -192,15 +216,27 @@ def set_target_sentence(sentence: str):
 def get_leaderboard():
     conn = get_conn()
     rows = conn.execute("""
-        SELECT p.username, MIN(a.input_tokens) AS best_tokens
+        SELECT p.username, a.input_tokens AS best_tokens,
+               p.created_at AS game_started_at, a.created_at AS matched_at
         FROM attempts a
         JOIN players p ON a.player_id = p.id
         WHERE a.is_exact_match = 1
-        GROUP BY a.player_id
-        ORDER BY best_tokens ASC
     """).fetchall()
     conn.close()
-    return [
-        {"rank": i + 1, "username": row["username"], "best_tokens": row["best_tokens"]}
-        for i, row in enumerate(rows)
-    ]
+
+    results = []
+    for row in rows:
+        try:
+            start = datetime.fromisoformat(row["game_started_at"])
+            end = datetime.fromisoformat(row["matched_at"])
+            time_seconds = max(0, int((end - start).total_seconds()))
+        except Exception:
+            time_seconds = 0
+        results.append({
+            "username": row["username"],
+            "best_tokens": row["best_tokens"],
+            "time_seconds": time_seconds,
+        })
+
+    results.sort(key=lambda x: (x["best_tokens"], x["time_seconds"]))
+    return [{"rank": i + 1, **r} for i, r in enumerate(results)]

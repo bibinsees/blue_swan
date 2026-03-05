@@ -80,6 +80,12 @@ def init_db(default_sentence: str = ""):
         conn.commit()
     except Exception:
         pass  # column already exists
+    # Migration: add organisation column if it doesn't exist yet
+    try:
+        conn.execute("ALTER TABLE players ADD COLUMN organisation TEXT NOT NULL DEFAULT ''")
+        conn.commit()
+    except Exception:
+        pass  # column already exists
     conn.commit()
     conn.close()
 
@@ -104,11 +110,11 @@ def set_max_attempts(value: int):
     conn.close()
 
 
-def create_player(username, email):
+def create_player(username, email, organisation=""):
     conn = get_conn()
     cursor = conn.execute(
-        "INSERT INTO players (username, email, created_at) VALUES (?, ?, ?)",
-        (username, email, datetime.now(timezone.utc).isoformat()),
+        "INSERT INTO players (username, email, organisation, created_at) VALUES (?, ?, ?, ?)",
+        (username, email, organisation.strip(), datetime.now(timezone.utc).isoformat()),
     )
     player_id = cursor.lastrowid
     conn.commit()
@@ -285,7 +291,7 @@ def remove_constraint(word: str):
 def get_leaderboard():
     conn = get_conn()
     rows = conn.execute("""
-        SELECT p.id AS player_id, p.username, a.input_tokens,
+        SELECT p.id AS player_id, p.username, p.organisation, a.input_tokens,
                p.created_at AS game_started_at, a.created_at AS matched_at
         FROM attempts a
         JOIN players p ON a.player_id = p.id
@@ -305,7 +311,7 @@ def get_leaderboard():
 
         pid = row["player_id"]
         if pid not in players:
-            players[pid] = {"username": row["username"], "attempts": []}
+            players[pid] = {"username": row["username"], "organisation": row["organisation"] or "", "attempts": []}
         players[pid]["attempts"].append((row["input_tokens"], time_seconds))
 
     # Pick best attempt per player: min tokens, then min time
@@ -314,6 +320,7 @@ def get_leaderboard():
         best_tokens, best_time = min(data["attempts"], key=lambda x: (x[0], x[1]))
         results.append({
             "username": data["username"],
+            "organisation": data["organisation"],
             "best_tokens": best_tokens,
             "time_seconds": best_time,
         })

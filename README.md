@@ -50,15 +50,14 @@ more rules:
 5. turn the ui into cairo theme.
 6. more closer means cosine distance calc need to be done. 
 0. make first round simple then increase difficulty. 2. how many rounds/sessions/target sentence should be there?
-1. make time out ie max time 2 minutes, after that automatically kill the process. Is it necessary task? if yes we do it after switching to nowlan mode
-2. Add institution for the leader board
+2. Add the leader board link in user game page. (this wait for the monitor, because if its public then no more changes/manipulation by admin)
 
 
-9. do word count so that they cant paste whole essay as prompt and try to crash the game.
 
 ### Decided not to:
 7. Make lower case and upper case irrelevant while matching. because if its relavant player can easily give uppercase/lowercase in the prompt and just prompt to make it lower/upper (do the opposite to generate the answer)
 8. Should we restrict encoding and decoding or - no becasue people can just give extra 'a' and ask remove 'a', so there is no way we force them to be creative like this "  if you add -, + you cant remove it using the Remove !: Bl!ue Sch!wan fliegt von Neu!schwanstein nach Schw!einfurt. Tharun said claude gave that answr. even if we do that then remove Z from all words can work. 
+
 
 
 # input tokens calculated by  input_tokens = response.usage.prompt_tokens

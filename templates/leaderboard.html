@@ -121,6 +121,10 @@
       color: #e8e8e8;
       font-size: 1.1rem;
     }
+    .org-cell {
+      font-size: 0.82rem;
+      color: #666;
+    }
     .tokens-cell {
       text-align: right;
       font-size: 1rem;
@@ -164,6 +168,7 @@
             <tr>
               <th>#</th>
               <th>Player</th>
+              <th>Firma / Organisation</th>
               <th style="text-align:right">Best Tokens</th>
               <th style="text-align:right">Time</th>
             </tr>
@@ -173,6 +178,7 @@
             <tr>
               <td class="rank-cell rank-{{ row.rank }}">{{ row.rank }}</td>
               <td class="username-cell">{{ row.username }}</td>
+              <td class="org-cell">{{ row.organisation or '—' }}</td>
               <td class="tokens-cell">{{ row.best_tokens }}<span class="unit">tokens</span></td>
               <td class="time-cell">{{ row.time_seconds }}s</td>
             </tr>
@@ -210,6 +216,7 @@
             <tr>
               <td class="rank-cell rank-${row.rank}">${row.rank}</td>
               <td class="username-cell">${escapeHtml(row.username)}</td>
+              <td class="org-cell">${row.organisation ? escapeHtml(row.organisation) : "—"}</td>
               <td class="tokens-cell">${row.best_tokens}<span class="unit">tokens</span></td>
               <td class="time-cell">${fmtTime(row.time_seconds)}</td>
             </tr>
@@ -221,6 +228,7 @@
                 <tr>
                   <th>#</th>
                   <th>Player</th>
+                  <th>Firma / Organisation</th>
                   <th style="text-align:right">Best Tokens</th>
                   <th style="text-align:right">Time</th>
                 </tr>

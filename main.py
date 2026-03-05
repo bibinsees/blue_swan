@@ -91,6 +91,7 @@ async def register(
     request: Request,
     username: str = Form(...),
     email: str = Form(...),
+    organisation: str = Form(...),
 ):
     if get_player_by_username(username):
         return templates.TemplateResponse(
@@ -102,7 +103,7 @@ async def register(
             "register.html",
             {"request": request, "error": "This email is already registered."},
         )
-    player_id = create_player(username, email)
+    player_id = create_player(username, email, organisation)
     return RedirectResponse(url=f"/game/{player_id}", status_code=303)
 
 

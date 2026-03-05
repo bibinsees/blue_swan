@@ -11,13 +11,14 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from openai import OpenAI
 
-from config import HOST_IP, MAX_ATTEMPTS, MAX_INPUT_TOKENS, MODEL, OPENAI_API_KEY, PORT, PUBLIC_URL, TARGET_SENTENCE
+from config import HOST_IP, MAX_ATTEMPTS, MAX_INPUT_TOKENS, GAME_DURATION_SECONDS, MODEL, OPENAI_API_KEY, PORT, PUBLIC_URL, TARGET_SENTENCE
 from database import (
     create_attempt,
     create_player,
     get_leaderboard,
     get_max_attempts,
     get_max_input_tokens,
+    get_game_duration,
     get_model,
     get_player_attempts,
     get_player_by_id,
@@ -27,6 +28,7 @@ from database import (
     get_target_sentence,
     set_max_attempts,
     set_max_input_tokens,
+    set_game_duration,
     set_model,
     set_target_sentence,
     get_constraints,
@@ -66,6 +68,7 @@ async def lifespan(app: FastAPI):
     init_db(default_sentence=TARGET_SENTENCE)
     set_max_attempts(MAX_ATTEMPTS)
     set_max_input_tokens(MAX_INPUT_TOKENS)
+    set_game_duration(GAME_DURATION_SECONDS)
     set_model(MODEL)
     generate_qr()
     yield
@@ -111,6 +114,9 @@ async def game_page(request: Request, player_id: int):
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
     attempts = get_player_attempts(player_id)
+    duration = get_game_duration()
+    elapsed = int((datetime.now(timezone.utc) - datetime.fromisoformat(player["created_at"])).total_seconds())
+    time_remaining = max(0, duration - elapsed)
     return templates.TemplateResponse(
         "game.html",
         {
@@ -124,6 +130,8 @@ async def game_page(request: Request, player_id: int):
             "has_exact_match": player_has_exact_match(player_id),
             "constraints": get_constraints(),
             "max_input_tokens": get_max_input_tokens(),
+            "time_remaining_seconds": time_remaining,
+            "game_duration_seconds": duration,
         },
     )
 
@@ -140,6 +148,12 @@ async def make_attempt(
     attempts = get_player_attempts(player_id)
     if len(attempts) >= get_max_attempts():
         return JSONResponse({"error": "Maximum attempts reached."}, status_code=400)
+
+    # Time limit check
+    duration = get_game_duration()
+    elapsed = int((datetime.now(timezone.utc) - datetime.fromisoformat(player["created_at"])).total_seconds())
+    if elapsed > duration:
+        return JSONResponse({"error": "Time's up! Your game session has ended."}, status_code=400)
 
     if not prompt_text.strip():
         return JSONResponse({"error": "Prompt cannot be empty."}, status_code=400)
@@ -213,6 +227,7 @@ async def admin_page(request: Request, response: Response):
             "current_sentence": get_target_sentence(),
             "current_max_attempts": get_max_attempts(),
             "current_max_input_tokens": get_max_input_tokens(),
+            "current_game_duration": get_game_duration(),
             "current_model": get_model(),
             "current_constraints": get_constraints(),
             "saved": False,
@@ -226,11 +241,13 @@ async def admin_update(
     target_sentence: str = Form(...),
     max_attempts: int = Form(...),
     max_input_tokens: int = Form(...),
+    game_duration_seconds: int = Form(...),
     model: str = Form(...),
 ):
     set_target_sentence(target_sentence.strip())
     set_max_attempts(max(1, max_attempts))
     set_max_input_tokens(max(1, max_input_tokens))
+    set_game_duration(max(30, game_duration_seconds))
     set_model(model.strip())
     return templates.TemplateResponse(
         "admin.html",
@@ -239,6 +256,7 @@ async def admin_update(
             "current_sentence": target_sentence.strip(),
             "current_max_attempts": max(1, max_attempts),
             "current_max_input_tokens": max(1, max_input_tokens),
+            "current_game_duration": max(30, game_duration_seconds),
             "current_model": model.strip(),
             "current_constraints": get_constraints(),
             "saved": True,

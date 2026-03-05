@@ -238,6 +238,26 @@ def set_max_input_tokens(value: int):
     conn.close()
 
 
+def get_game_duration() -> int:
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT value FROM settings WHERE key = 'game_duration_seconds'"
+    ).fetchone()
+    conn.close()
+    return int(row["value"]) if row else 360
+
+
+def set_game_duration(value: int):
+    conn = get_conn()
+    conn.execute(
+        "INSERT INTO settings (key, value) VALUES ('game_duration_seconds', ?) "
+        "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        (str(value),),
+    )
+    conn.commit()
+    conn.close()
+
+
 def get_constraints() -> list:
     conn = get_conn()
     rows = conn.execute("SELECT word FROM constraints ORDER BY id ASC").fetchall()

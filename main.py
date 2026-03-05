@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from openai import OpenAI
 
-from config import HOST_IP, MAX_ATTEMPTS, MAX_INPUT_TOKENS, MODEL, OPENAI_API_KEY, PORT, TARGET_SENTENCE
+from config import HOST_IP, MAX_ATTEMPTS, MAX_INPUT_TOKENS, MODEL, OPENAI_API_KEY, PORT, PUBLIC_URL, TARGET_SENTENCE
 from database import (
     create_attempt,
     create_player,
@@ -50,11 +50,15 @@ def get_local_ip():
 def generate_qr():
     os.makedirs("static", exist_ok=True)
     ip = HOST_IP if HOST_IP else get_local_ip()
-    url = f"http://{ip}:{PORT}/"
-    img = qrcode.make(url)
+    local_base = f"http://{ip}:{PORT}"
+    player_url = PUBLIC_URL.rstrip("/") + "/" if PUBLIC_URL else f"{local_base}/"
+    img = qrcode.make(player_url)
     img.save("static/qrcode.png")
-    print(f"\n  Game URL: {url}")
-    print(f"  Leaderboard: http://{ip}:{PORT}/leaderboard\n")
+    print(f"\n  Player URL (QR): {player_url}")
+    if PUBLIC_URL:
+        print(f"  Tunnel active  : {PUBLIC_URL} → localhost:{PORT}")
+    print(f"  Leaderboard    : {local_base}/leaderboard")
+    print(f"  Admin          : {local_base}/admin\n")
 
 
 @asynccontextmanager
@@ -270,12 +274,13 @@ async def api_remove_constraint(word: str = Form(...)):
 async def leaderboard_page(request: Request):
     leaderboard = get_leaderboard()
     ip = HOST_IP if HOST_IP else get_local_ip()
+    register_url = PUBLIC_URL.rstrip("/") + "/" if PUBLIC_URL else f"http://{ip}:{PORT}/"
     return templates.TemplateResponse(
         "leaderboard.html",
         {
             "request": request,
             "leaderboard": leaderboard,
-            "register_url": f"http://{ip}:{PORT}/",
+            "register_url": register_url,
         },
     )
 

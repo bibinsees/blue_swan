@@ -101,6 +101,70 @@
       border-top: 1px solid #222;
       margin: 28px 0;
     }
+    .constraints-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .constraints-row input {
+      flex: 1;
+    }
+    .add-btn {
+      margin-top: 0;
+      width: auto;
+      padding: 12px 18px;
+      font-size: 0.9rem;
+      background: #1a3a1a;
+      color: #6aee6a;
+      border: 1px solid #2a6a2a;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .add-btn:hover { background: #1f4a1f; }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      min-height: 32px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a1a3a;
+      border: 1px solid #2a2a6a;
+      color: #a78bfa;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .chip-remove {
+      background: none;
+      border: none;
+      color: #a78bfa;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      margin: 0;
+      width: auto;
+    }
+    .chip-remove:hover { color: #f88; }
+    .no-constraints {
+      font-size: 0.8rem;
+      color: #444;
+      font-style: italic;
+    }
+    .constraint-error {
+      font-size: 0.78rem;
+      color: #f88;
+      margin-top: 6px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -142,6 +206,21 @@
 
       <hr class="divider" />
 
+      <div class="current-label">Current max input tokens</div>
+      <div class="current-box">{{ current_max_input_tokens }}</div>
+
+      <label for="max_input_tokens">Max input tokens per attempt</label>
+      <input
+        type="number"
+        id="max_input_tokens"
+        name="max_input_tokens"
+        min="1"
+        required
+        value="{{ current_max_input_tokens }}"
+      />
+
+      <hr class="divider" />
+
       <div class="current-label">Current model</div>
       <div class="current-box">{{ current_model }}</div>
 
@@ -157,6 +236,89 @@
 
       <button type="submit">Save &amp; Go Live</button>
     </form>
+
+    <hr class="divider" />
+
+    <label>Constraints</label>
+    <p style="font-size:0.78rem;color:#555;margin-bottom:10px;">
+      Players cannot use these words in their prompts. Takes effect immediately.
+    </p>
+
+    <div class="chips" id="chips-container">
+      {% if current_constraints %}
+        {% for word in current_constraints %}
+        <span class="chip" id="chip-{{ word }}">
+          {{ word }}
+          <button class="chip-remove" onclick="removeConstraint('{{ word }}')" title="Remove">×</button>
+        </span>
+        {% endfor %}
+      {% else %}
+        <span class="no-constraints" id="no-constraints-msg">No constraints set.</span>
+      {% endif %}
+    </div>
+
+    <div class="constraints-row">
+      <input type="text" id="constraint-input" placeholder="e.g. please" />
+      <button class="add-btn" onclick="addConstraint()">+ Add</button>
+    </div>
+    <div class="constraint-error" id="constraint-error"></div>
   </div>
+
+  <script>
+    async function addConstraint() {
+      const input = document.getElementById("constraint-input");
+      const errorEl = document.getElementById("constraint-error");
+      const word = input.value.trim().toLowerCase();
+      errorEl.style.display = "none";
+
+      if (!word) return;
+      if (word.includes(" ")) {
+        errorEl.textContent = "Enter a single word only.";
+        errorEl.style.display = "block";
+        return;
+      }
+
+      const form = new FormData();
+      form.append("word", word);
+      const res = await fetch("/api/constraints/add", { method: "POST", body: form });
+      const data = await res.json();
+
+      if (data.error) {
+        errorEl.textContent = data.error;
+        errorEl.style.display = "block";
+        return;
+      }
+
+      input.value = "";
+      renderChips(data.constraints);
+    }
+
+    async function removeConstraint(word) {
+      const form = new FormData();
+      form.append("word", word);
+      const res = await fetch("/api/constraints/remove", { method: "POST", body: form });
+      const data = await res.json();
+      renderChips(data.constraints);
+    }
+
+    function renderChips(words) {
+      const container = document.getElementById("chips-container");
+      if (words.length === 0) {
+        container.innerHTML = '<span class="no-constraints" id="no-constraints-msg">No constraints set.</span>';
+        return;
+      }
+      container.innerHTML = words.map(w => `
+        <span class="chip" id="chip-${w}">
+          ${w}
+          <button class="chip-remove" onclick="removeConstraint('${w}')" title="Remove">×</button>
+        </span>
+      `).join("");
+    }
+
+    // Allow pressing Enter in constraint input
+    document.getElementById("constraint-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); addConstraint(); }
+    });
+  </script>
 </body>
 </html>

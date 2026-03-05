@@ -36,6 +36,11 @@ def init_db(default_sentence: str = ""):
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
         );
+
+        CREATE TABLE IF NOT EXISTS constraints (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            word TEXT NOT NULL UNIQUE
+        );
     """)
     # Migration: remove phone column if it exists (recreate players table)
     cols = [row[1] for row in conn.execute("PRAGMA table_info(players)").fetchall()]
@@ -213,10 +218,54 @@ def set_target_sentence(sentence: str):
     conn.close()
 
 
+def get_max_input_tokens() -> int:
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT value FROM settings WHERE key = 'max_input_tokens'"
+    ).fetchone()
+    conn.close()
+    return int(row["value"]) if row else 500
+
+
+def set_max_input_tokens(value: int):
+    conn = get_conn()
+    conn.execute(
+        "INSERT INTO settings (key, value) VALUES ('max_input_tokens', ?) "
+        "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        (str(value),),
+    )
+    conn.commit()
+    conn.close()
+
+
+def get_constraints() -> list:
+    conn = get_conn()
+    rows = conn.execute("SELECT word FROM constraints ORDER BY id ASC").fetchall()
+    conn.close()
+    return [row["word"] for row in rows]
+
+
+def add_constraint(word: str):
+    conn = get_conn()
+    conn.execute(
+        "INSERT OR IGNORE INTO constraints (word) VALUES (?)",
+        (word.strip().lower(),),
+    )
+    conn.commit()
+    conn.close()
+
+
+def remove_constraint(word: str):
+    conn = get_conn()
+    conn.execute("DELETE FROM constraints WHERE word = ?", (word.strip().lower(),))
+    conn.commit()
+    conn.close()
+
+
 def get_leaderboard():
     conn = get_conn()
     rows = conn.execute("""
-        SELECT p.username, a.input_tokens AS best_tokens,
+        SELECT p.id AS player_id, p.username, a.input_tokens,
                p.created_at AS game_started_at, a.created_at AS matched_at
         FROM attempts a
         JOIN players p ON a.player_id = p.id
@@ -224,7 +273,8 @@ def get_leaderboard():
     """).fetchall()
     conn.close()
 
-    results = []
+    # Group by player; compute time for each exact match attempt
+    players = {}
     for row in rows:
         try:
             start = datetime.fromisoformat(row["game_started_at"])
@@ -232,10 +282,20 @@ def get_leaderboard():
             time_seconds = max(0, int((end - start).total_seconds()))
         except Exception:
             time_seconds = 0
+
+        pid = row["player_id"]
+        if pid not in players:
+            players[pid] = {"username": row["username"], "attempts": []}
+        players[pid]["attempts"].append((row["input_tokens"], time_seconds))
+
+    # Pick best attempt per player: min tokens, then min time
+    results = []
+    for data in players.values():
+        best_tokens, best_time = min(data["attempts"], key=lambda x: (x[0], x[1]))
         results.append({
-            "username": row["username"],
-            "best_tokens": row["best_tokens"],
-            "time_seconds": time_seconds,
+            "username": data["username"],
+            "best_tokens": best_tokens,
+            "time_seconds": best_time,
         })
 
     results.sort(key=lambda x: (x["best_tokens"], x["time_seconds"]))

@@ -210,6 +210,16 @@
       margin-top: 10px;
       display: none;
     }
+    .warning-msg {
+      background: #3a2a00;
+      border: 1px solid #7a5a00;
+      color: #ffc84a;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -222,6 +232,18 @@
   <div class="target-box">
     <div class="label">Generate this sentence exactly:</div>
     <div class="sentence">{{ target_sentence }}</div>
+  </div>
+
+  <div style="max-width:600px;margin:0 auto 20px auto;background:#1a1a2a;border:1px solid #2a2a4a;border-radius:10px;padding:14px 20px;">
+    <div style="font-size:0.72rem;color:#7a7aaa;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Rules</div>
+    <div style="font-size:0.88rem;color:#ccc;margin-bottom:6px;">
+      Maximum <strong style="color:#6ab4ee;">{{ max_input_tokens }} tokens</strong> per prompt.
+    </div>
+    {% if constraints %}
+    <div style="font-size:0.88rem;color:#ccc;">
+      You can't use the words <strong style="color:#f88;">{{ constraints | join(', ') }}</strong> in your prompt.
+    </div>
+    {% endif %}
   </div>
 
   <div class="attempts-section">
@@ -261,11 +283,11 @@
   </div>
 
   <div class="prompt-section">
-    {% if has_exact_match %}
-    <div class="done-msg" style="border-color:#2a6a2a; background:#141f14; color:#6aee6a;">
-      You got an exact match! Your score is on the leaderboard.
+    <div id="exact-match-banner" class="done-msg" style="border-color:#2a6a2a;background:#141f14;color:#6aee6a;margin-bottom:14px;{% if not has_exact_match %}display:none;{% endif %}">
+      {% if has_exact_match %}You've already scored an exact match! Keep going for a better score.{% endif %}
     </div>
-    {% elif attempts_used >= max_attempts %}
+
+    {% if attempts_used >= max_attempts %}
     <div class="done-msg">You've used all {{ max_attempts }} attempts. Check the leaderboard!</div>
     {% else %}
     {% set remaining = max_attempts - attempts_used %}
@@ -274,6 +296,7 @@
     </div>
     <div class="model-indicator">Model: <span id="model-name">{{ current_model }}</span></div>
     <textarea id="prompt-input" placeholder="Type your prompt here…"></textarea>
+    <div class="warning-msg" id="warning-msg"></div>
     <div class="error-msg" id="error-msg"></div>
     <div class="spinner" id="spinner">Sending to <span id="spinner-model">{{ current_model }}</span>…</div>
     <button id="submit-btn">Submit Prompt</button>
@@ -290,6 +313,7 @@
     const attemptsList = document.getElementById("attempts-list");
     const spinner = document.getElementById("spinner");
     const errorMsg = document.getElementById("error-msg");
+    const warningMsg = document.getElementById("warning-msg");
     const remainingCount = document.getElementById("remaining-count");
 
     if (submitBtn) {
@@ -301,6 +325,7 @@
         promptInput.disabled = true;
         spinner.classList.add("show");
         errorMsg.style.display = "none";
+        warningMsg.style.display = "none";
 
         try {
           const form = new FormData();
@@ -309,6 +334,14 @@
 
           const res = await fetch("/attempt", { method: "POST", body: form });
           const data = await res.json();
+
+          if (data.constraint_violation) {
+            warningMsg.textContent = data.constraint_violation;
+            warningMsg.style.display = "block";
+            submitBtn.disabled = false;
+            promptInput.disabled = false;
+            return;
+          }
 
           if (data.error) {
             errorMsg.textContent = data.error;
@@ -358,12 +391,15 @@
           promptInput.value = "";
 
           if (data.is_exact_match) {
-            const section = document.querySelector(".prompt-section");
             const timeStr = (data.time_seconds !== null && data.time_seconds !== undefined)
               ? ` in ${data.time_seconds < 60 ? data.time_seconds + "s" : Math.floor(data.time_seconds/60) + "m " + (data.time_seconds%60) + "s"}`
               : "";
-            section.innerHTML = `<div class="done-msg" style="border-color:#2a6a2a;background:#141f14;color:#6aee6a;">You got an exact match${timeStr}! Your score is on the leaderboard.</div>`;
-          } else if (data.attempts_remaining > 0) {
+            const banner = document.getElementById("exact-match-banner");
+            banner.textContent = `Exact match${timeStr}! Keep going — fewer tokens wins.`;
+            banner.style.display = "block";
+          }
+
+          if (data.attempts_remaining > 0) {
             promptInput.disabled = false;
             submitBtn.disabled = false;
             remainingCount.textContent = data.attempts_remaining;

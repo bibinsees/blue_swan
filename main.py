@@ -5,18 +5,19 @@ from datetime import datetime, timezone
 
 import qrcode
 import uvicorn
-from fastapi import FastAPI, Form, HTTPException, Request
+from fastapi import FastAPI, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from openai import OpenAI
 
-from config import HOST_IP, MAX_ATTEMPTS, MODEL, OPENAI_API_KEY, PORT, TARGET_SENTENCE
+from config import HOST_IP, MAX_ATTEMPTS, MAX_INPUT_TOKENS, MODEL, OPENAI_API_KEY, PORT, TARGET_SENTENCE
 from database import (
     create_attempt,
     create_player,
     get_leaderboard,
     get_max_attempts,
+    get_max_input_tokens,
     get_model,
     get_player_attempts,
     get_player_by_id,
@@ -25,8 +26,12 @@ from database import (
     player_has_exact_match,
     get_target_sentence,
     set_max_attempts,
+    set_max_input_tokens,
     set_model,
     set_target_sentence,
+    get_constraints,
+    add_constraint,
+    remove_constraint,
     init_db,
 )
 
@@ -56,6 +61,7 @@ def generate_qr():
 async def lifespan(app: FastAPI):
     init_db(default_sentence=TARGET_SENTENCE)
     set_max_attempts(MAX_ATTEMPTS)
+    set_max_input_tokens(MAX_INPUT_TOKENS)
     set_model(MODEL)
     generate_qr()
     yield
@@ -112,6 +118,8 @@ async def game_page(request: Request, player_id: int):
             "attempts_used": len(attempts),
             "current_model": get_model(),
             "has_exact_match": player_has_exact_match(player_id),
+            "constraints": get_constraints(),
+            "max_input_tokens": get_max_input_tokens(),
         },
     )
 
@@ -126,13 +134,23 @@ async def make_attempt(
         raise HTTPException(status_code=404, detail="Player not found")
 
     attempts = get_player_attempts(player_id)
-    if player_has_exact_match(player_id):
-        return JSONResponse({"error": "You already got an exact match!"}, status_code=400)
     if len(attempts) >= get_max_attempts():
         return JSONResponse({"error": "Maximum attempts reached."}, status_code=400)
 
     if not prompt_text.strip():
         return JSONResponse({"error": "Prompt cannot be empty."}, status_code=400)
+
+    # Token limit check — does not consume an attempt
+    estimated_tokens = len(prompt_text.split())
+    if estimated_tokens > get_max_input_tokens():
+        return JSONResponse({"constraint_violation": "Nice try with all that yapping, You exceeded token limit, You are indeed a rule breaker!"})
+
+    # Constraint check — does not consume an attempt
+    constraints = get_constraints()
+    prompt_lower = prompt_text.lower()
+    for word in constraints:
+        if word in prompt_lower.split():
+            return JSONResponse({"constraint_violation": f"Nice try! Caught you using the words prohibited :)"})
 
     response = client.chat.completions.create(
         model=get_model(),
@@ -182,14 +200,17 @@ async def make_attempt(
 # ── Admin ─────────────────────────────────────────────────────────────────────
 
 @app.get("/admin", response_class=HTMLResponse)
-async def admin_page(request: Request):
+async def admin_page(request: Request, response: Response):
+    response.headers["Cache-Control"] = "no-store"
     return templates.TemplateResponse(
         "admin.html",
         {
             "request": request,
             "current_sentence": get_target_sentence(),
             "current_max_attempts": get_max_attempts(),
+            "current_max_input_tokens": get_max_input_tokens(),
             "current_model": get_model(),
+            "current_constraints": get_constraints(),
             "saved": False,
         },
     )
@@ -200,10 +221,12 @@ async def admin_update(
     request: Request,
     target_sentence: str = Form(...),
     max_attempts: int = Form(...),
+    max_input_tokens: int = Form(...),
     model: str = Form(...),
 ):
     set_target_sentence(target_sentence.strip())
     set_max_attempts(max(1, max_attempts))
+    set_max_input_tokens(max(1, max_input_tokens))
     set_model(model.strip())
     return templates.TemplateResponse(
         "admin.html",
@@ -211,10 +234,34 @@ async def admin_update(
             "request": request,
             "current_sentence": target_sentence.strip(),
             "current_max_attempts": max(1, max_attempts),
+            "current_max_input_tokens": max(1, max_input_tokens),
             "current_model": model.strip(),
+            "current_constraints": get_constraints(),
             "saved": True,
         },
     )
+
+
+# ── Constraints API ───────────────────────────────────────────────────────────
+
+@app.get("/api/constraints")
+async def api_get_constraints():
+    return get_constraints()
+
+
+@app.post("/api/constraints/add")
+async def api_add_constraint(word: str = Form(...)):
+    word = word.strip().lower()
+    if not word or " " in word:
+        return JSONResponse({"error": "Enter a single word."}, status_code=400)
+    add_constraint(word)
+    return {"constraints": get_constraints()}
+
+
+@app.post("/api/constraints/remove")
+async def api_remove_constraint(word: str = Form(...)):
+    remove_constraint(word.strip().lower())
+    return {"constraints": get_constraints()}
 
 
 # ── Leaderboard ───────────────────────────────────────────────────────────────

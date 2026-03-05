@@ -162,14 +162,14 @@ async def make_attempt(
     # Token limit check — does not consume an attempt
     estimated_tokens = len(prompt_text.split())
     if estimated_tokens > get_max_input_tokens():
-        return JSONResponse({"constraint_violation": "Nice try with all that yapping, You exceeded token limit, You are indeed a rule breaker!"})
+        return JSONResponse({"constraint_violation": "You exceeded token limit, reduce the words and try again"})
 
     # Constraint check — does not consume an attempt
     constraints = get_constraints()
     prompt_lower = prompt_text.lower()
     for word in constraints:
         if word in prompt_lower.split():
-            return JSONResponse({"constraint_violation": f"Nice try! Caught you using the words prohibited :)"})
+            return JSONResponse({"constraint_violation": f"Nice try! Caught you using the words prohibited, You are indeed a rule breaker :)"})
 
     response = client.chat.completions.create(
         model=get_model(),

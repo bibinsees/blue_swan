@@ -200,22 +200,6 @@
     }
     .spinner.show { display: block; }
 
-    .timer-bar {
-      max-width: 600px;
-      margin: 0 auto 16px auto;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 10px;
-      padding: 10px 16px;
-    }
-    .timer-row { display: flex; justify-content: space-between; align-items: center; }
-    .timer-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em; }
-    .timer-value { font-size: 1rem; font-weight: 700; color: #f0f0f0; font-variant-numeric: tabular-nums; }
-    .timer-value.warning { color: #f59e0b; }
-    .timer-value.expired { color: #ef4444; }
-    .timer-progress { width: 100%; height: 3px; background: #222; border-radius: 2px; margin-top: 8px; overflow: hidden; }
-    .timer-progress-fill { height: 100%; background: #2563eb; border-radius: 2px; transition: width 1s linear, background 1s; }
-
     .error-msg {
       background: #3a1010;
       border: 1px solid #7a2020;
@@ -243,16 +227,6 @@
   <div class="header">
     <h1>Blue Schwan Challenge</h1>
     <div class="player-info">Playing as: <strong>{{ player.username }}</strong></div>
-  </div>
-
-  <div class="timer-bar" id="timer-bar">
-    <div class="timer-row">
-      <span class="timer-label">Time remaining</span>
-      <span class="timer-value" id="timer-value">…</span>
-    </div>
-    <div class="timer-progress">
-      <div class="timer-progress-fill" id="timer-fill" style="width:100%"></div>
-    </div>
   </div>
 
   <div class="target-box">
@@ -447,31 +421,17 @@
       });
     }
 
-    // ── Countdown timer ──────────────────────────────────────────────────────
+    // ── Session expiry (silent — no visible countdown) ───────────────────────
     (function() {
-      let secsLeft = {{ time_remaining_seconds }};
-      const total = {{ game_duration_seconds }};
-      const timerValue = document.getElementById("timer-value");
-      const timerFill = document.getElementById("timer-fill");
-
-      function fmtTime(s) {
-        const m = Math.floor(s / 60);
-        const sec = s % 60;
-        return m > 0 ? `${m}m ${String(sec).padStart(2, "0")}s` : `${sec}s`;
-      }
-
-      function tick() {
-        if (!timerValue) return;
-        timerValue.textContent = secsLeft > 0 ? fmtTime(secsLeft) : "Time's up!";
-        timerValue.className = "timer-value" +
-          (secsLeft <= 0 ? " expired" : secsLeft <= 30 ? " warning" : "");
-        if (timerFill) {
-          const pct = total > 0 ? Math.max(0, (secsLeft / total) * 100) : 0;
-          timerFill.style.width = pct + "%";
-          timerFill.style.background = secsLeft <= 0 ? "#ef4444" : secsLeft <= 30 ? "#f59e0b" : "#2563eb";
-        }
-        if (secsLeft <= 0) {
-          // Disable the form
+      const secsLeft = {{ time_remaining_seconds }};
+      if (secsLeft <= 0) {
+        // Already expired on page load
+        const inp = document.getElementById("prompt-input");
+        const btn = document.getElementById("submit-btn");
+        if (inp) inp.disabled = true;
+        if (btn) btn.disabled = true;
+      } else {
+        setTimeout(function() {
           const inp = document.getElementById("prompt-input");
           const btn = document.getElementById("submit-btn");
           if (inp) inp.disabled = true;
@@ -482,15 +442,11 @@
             msg.id = "timeout-msg";
             msg.className = "done-msg";
             msg.style.marginTop = "14px";
-            msg.textContent = "Time's up! Your session has ended.";
+            msg.textContent = "Your session has ended. Check the leaderboard!";
             section.appendChild(msg);
           }
-          return;
-        }
-        secsLeft--;
-        setTimeout(tick, 1000);
+        }, secsLeft * 1000);
       }
-      tick();
     })();
 
     function escapeHtml(str) {

@@ -390,13 +390,15 @@
 
           promptInput.value = "";
 
+          const banner = document.getElementById("exact-match-banner");
           if (data.is_exact_match) {
             const timeStr = (data.time_seconds !== null && data.time_seconds !== undefined)
               ? ` in ${data.time_seconds < 60 ? data.time_seconds + "s" : Math.floor(data.time_seconds/60) + "m " + (data.time_seconds%60) + "s"}`
               : "";
-            const banner = document.getElementById("exact-match-banner");
             banner.textContent = `Exact match${timeStr}! Keep going — fewer tokens wins.`;
             banner.style.display = "block";
+          } else {
+            banner.style.display = "none";
           }
 
           if (data.attempts_remaining > 0) {

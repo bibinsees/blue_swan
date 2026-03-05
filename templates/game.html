@@ -8,7 +8,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: sans-serif;
-      background: #0f0f0f;
+      background: #0a0a0a;
       color: #f0f0f0;
       min-height: 100vh;
       padding: 20px;
@@ -16,21 +16,25 @@
     .header {
       max-width: 600px;
       margin: 0 auto 20px auto;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
     }
-    .header h1 { font-size: 1.2rem; color: #fff; }
-    .header .player-info { font-size: 0.8rem; color: #666; margin-top: 2px; }
+    .header h1 { font-size: 1.2rem; color: #f97316; font-weight: 800; }
+    .header .player-info { font-size: 0.8rem; color: #555; }
+    .header .player-info strong { color: #fff; }
 
     .target-box {
       max-width: 600px;
       margin: 0 auto 24px auto;
-      background: #1a2a1a;
-      border: 1px solid #2a4a2a;
+      background: #111;
+      border: 1px solid #f97316;
       border-radius: 10px;
       padding: 16px 20px;
     }
     .target-box .label {
       font-size: 0.72rem;
-      color: #6a9a6a;
+      color: #f97316;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 8px;
@@ -38,32 +42,55 @@
     .target-box .sentence {
       font-size: 1.1rem;
       font-weight: 600;
-      color: #90ee90;
+      color: #fff;
       line-height: 1.5;
     }
+
+    .rules-box {
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 14px 20px;
+    }
+    .rules-box .rules-label {
+      font-size: 0.72rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .rules-box .rules-line {
+      font-size: 0.88rem;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+    .rules-box .rules-line strong { color: #f97316; }
+    .rules-box .rules-line .banned { color: #ef4444; }
 
     .attempts-section {
       max-width: 600px;
       margin: 0 auto;
     }
     .attempts-section h2 {
-      font-size: 0.8rem;
-      color: #666;
+      font-size: 0.78rem;
+      color: #444;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 14px;
     }
 
     .attempt-card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
+      background: #111;
+      border: 1px solid #1e1e1e;
       border-radius: 10px;
       padding: 16px;
       margin-bottom: 14px;
     }
     .attempt-card.exact {
-      border-color: #2a6a2a;
-      background: #141f14;
+      border-color: #f97316;
+      background: #120a00;
     }
     .attempt-header {
       display: flex;
@@ -73,7 +100,7 @@
     }
     .attempt-num {
       font-size: 0.75rem;
-      color: #888;
+      color: #555;
       font-weight: 600;
     }
     .badge {
@@ -82,15 +109,13 @@
       border-radius: 20px;
       font-weight: 600;
     }
-    .badge.match { background: #1a4a1a; color: #6aee6a; }
-    .badge.no-match { background: #3a1a1a; color: #ee6a6a; }
+    .badge.match { background: #2a1200; color: #f97316; border: 1px solid #7a3a00; }
+    .badge.no-match { background: #1a0505; color: #f87171; border: 1px solid #5a1010; }
 
-    .attempt-row {
-      margin-bottom: 8px;
-    }
+    .attempt-row { margin-bottom: 8px; }
     .attempt-row .row-label {
       font-size: 0.7rem;
-      color: #555;
+      color: #444;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       margin-bottom: 3px;
@@ -98,7 +123,7 @@
     .attempt-row .row-value {
       font-size: 0.85rem;
       color: #ccc;
-      background: #111;
+      background: #0a0a0a;
       border-radius: 6px;
       padding: 8px 10px;
       word-break: break-word;
@@ -107,10 +132,20 @@
     }
     .tokens-badge {
       display: inline-block;
-      background: #1a2a3a;
-      color: #6ab4ee;
+      background: #1a0d00;
+      color: #f97316;
       font-size: 0.75rem;
       padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      border: 1px solid #3d1f00;
+    }
+    .model-badge {
+      display: inline-block;
+      background: #1a1a1a;
+      color: #888;
+      font-size: 0.7rem;
+      padding: 2px 8px;
       border-radius: 6px;
       font-weight: 600;
     }
@@ -121,72 +156,59 @@
     }
     .attempts-counter {
       font-size: 0.8rem;
-      color: #888;
+      color: #555;
       margin-bottom: 12px;
     }
-    .attempts-counter span { color: #f0f0f0; font-weight: 600; }
+    .attempts-counter span { color: #f97316; font-weight: 600; }
     .model-indicator {
       font-size: 0.75rem;
-      color: #555;
+      color: #444;
       margin-bottom: 10px;
     }
-    .model-indicator span {
-      color: #a78bfa;
-      font-weight: 600;
-    }
-    .model-badge {
-      display: inline-block;
-      background: #1e1a2e;
-      color: #a78bfa;
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-weight: 600;
-    }
+    .model-indicator span { color: #888; font-weight: 600; }
 
     textarea {
       width: 100%;
       min-height: 100px;
       background: #111;
-      border: 1px solid #333;
+      border: 1px solid #2a2a2a;
       border-radius: 8px;
-      color: #f0f0f0;
+      color: #fff;
       font-size: 0.95rem;
       padding: 12px 14px;
       resize: vertical;
       outline: none;
       font-family: sans-serif;
       line-height: 1.5;
+      transition: border-color 0.15s;
     }
-    textarea:focus { border-color: #555; }
-    textarea:disabled { opacity: 0.4; cursor: not-allowed; }
+    textarea:focus { border-color: #f97316; }
+    textarea:disabled { opacity: 0.35; cursor: not-allowed; }
 
     button#submit-btn {
       margin-top: 12px;
       width: 100%;
       padding: 13px;
-      background: #2563eb;
-      color: #fff;
+      background: #f97316;
+      color: #000;
       border: none;
       border-radius: 8px;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
+      transition: background 0.15s;
     }
-    button#submit-btn:disabled {
-      background: #1a1a3a;
-      color: #444;
-      cursor: not-allowed;
-    }
-    button#submit-btn:active:not(:disabled) { background: #1d4ed8; }
+    button#submit-btn:hover:not(:disabled) { background: #fb923c; }
+    button#submit-btn:disabled { background: #1a1a1a; color: #333; cursor: not-allowed; }
+    button#submit-btn:active:not(:disabled) { background: #ea580c; }
 
     .done-msg {
-      background: #1a1a2a;
-      border: 1px solid #2a2a4a;
+      background: #111;
+      border: 1px solid #222;
       border-radius: 8px;
       padding: 14px;
       text-align: center;
-      color: #888;
+      color: #666;
       font-size: 0.9rem;
       margin-top: 14px;
     }
@@ -201,8 +223,8 @@
     .spinner.show { display: block; }
 
     .error-msg {
-      background: #3a1010;
-      border: 1px solid #7a2020;
+      background: #1a0505;
+      border: 1px solid #5a1010;
       color: #f88;
       padding: 10px 14px;
       border-radius: 8px;
@@ -211,9 +233,9 @@
       display: none;
     }
     .warning-msg {
-      background: #3a2a00;
-      border: 1px solid #7a5a00;
-      color: #ffc84a;
+      background: #1a0d00;
+      border: 1px solid #3d1f00;
+      color: #fb923c;
       padding: 10px 14px;
       border-radius: 8px;
       font-size: 0.85rem;
@@ -225,7 +247,7 @@
 <body>
 
   <div class="header">
-    <h1>Blue Schwan Challenge</h1>
+    <h1>Blue Schwan</h1>
     <div class="player-info">Playing as: <strong>{{ player.username }}</strong></div>
   </div>
 
@@ -234,14 +256,14 @@
     <div class="sentence">{{ target_sentence }}</div>
   </div>
 
-  <div style="max-width:600px;margin:0 auto 20px auto;background:#1a1a2a;border:1px solid #2a2a4a;border-radius:10px;padding:14px 20px;">
-    <div style="font-size:0.72rem;color:#7a7aaa;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Rules</div>
-    <div style="font-size:0.88rem;color:#ccc;margin-bottom:6px;">
-      Maximum <strong style="color:#6ab4ee;">{{ max_input_tokens }} tokens</strong> per prompt.
+  <div class="rules-box">
+    <div class="rules-label">Rules</div>
+    <div class="rules-line">
+      Maximum <strong>{{ max_input_tokens }} tokens</strong> per prompt.
     </div>
     {% if constraints %}
-    <div style="font-size:0.88rem;color:#ccc;">
-      You can't use the words <strong style="color:#f88;">{{ constraints | join(', ') }}</strong> in your prompt.
+    <div class="rules-line">
+      You can't use the words <span class="banned">{{ constraints | join(', ') }}</span> in your prompt.
     </div>
     {% endif %}
   </div>
@@ -283,7 +305,7 @@
   </div>
 
   <div class="prompt-section">
-    <div id="exact-match-banner" class="done-msg" style="border-color:#2a6a2a;background:#141f14;color:#6aee6a;margin-bottom:14px;{% if not has_exact_match %}display:none;{% endif %}">
+    <div id="exact-match-banner" class="done-msg" style="border-color:#f97316;background:#120a00;color:#f97316;margin-bottom:14px;{% if not has_exact_match %}display:none;{% endif %}">
       {% if has_exact_match %}You've already scored an exact match! Keep going for a better score.{% endif %}
     </div>
 
@@ -380,7 +402,6 @@
               <div><span class="model-badge">${escapeHtml(data.model_used)}</span></div>
             </div>
           `;
-          // Update model indicator in case admin changed it
           const modelName = document.getElementById("model-name");
           const spinnerModel = document.getElementById("spinner-model");
           if (modelName) modelName.textContent = data.model_used;
@@ -425,7 +446,6 @@
     (function() {
       const secsLeft = {{ time_remaining_seconds }};
       if (secsLeft <= 0) {
-        // Already expired on page load
         const inp = document.getElementById("prompt-input");
         const btn = document.getElementById("submit-btn");
         if (inp) inp.disabled = true;

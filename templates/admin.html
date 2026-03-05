@@ -8,7 +8,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: sans-serif;
-      background: #0f0f0f;
+      background: #0a0a0a;
       color: #f0f0f0;
       min-height: 100vh;
       display: flex;
@@ -17,21 +17,22 @@
       padding: 24px;
     }
     .card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
+      background: #111;
+      border: 1px solid #222;
       border-radius: 12px;
       padding: 32px 28px;
       width: 100%;
       max-width: 520px;
     }
+    .logo { font-size: 1rem; font-weight: 800; color: #f97316; margin-bottom: 4px; }
     h1 { font-size: 1.3rem; color: #fff; margin-bottom: 6px; }
     .subtitle { font-size: 0.82rem; color: #555; margin-bottom: 28px; }
-    label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 8px; }
+    label { display: block; font-size: 0.78rem; color: #777; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
     textarea {
       width: 100%;
       min-height: 80px;
-      background: #111;
-      border: 1px solid #333;
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
       border-radius: 8px;
       color: #f0f0f0;
       font-size: 1rem;
@@ -40,44 +41,47 @@
       outline: none;
       font-family: sans-serif;
       line-height: 1.5;
+      transition: border-color 0.15s;
     }
-    textarea:focus { border-color: #555; }
+    textarea:focus { border-color: #f97316; }
     button {
       margin-top: 16px;
       width: 100%;
       padding: 13px;
-      background: #7c3aed;
-      color: #fff;
+      background: #f97316;
+      color: #000;
       border: none;
       border-radius: 8px;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
+      transition: background 0.15s;
     }
-    button:active { background: #6d28d9; }
+    button:hover { background: #fb923c; }
+    button:active { background: #ea580c; }
     .success {
-      background: #1a3a1a;
-      border: 1px solid #2a6a2a;
-      color: #6aee6a;
+      background: #1a0d00;
+      border: 1px solid #7a3a00;
+      color: #f97316;
       padding: 10px 14px;
       border-radius: 8px;
       font-size: 0.85rem;
       margin-bottom: 20px;
     }
     .current-box {
-      background: #111;
-      border: 1px solid #222;
+      background: #0a0a0a;
+      border: 1px solid #1e1e1e;
       border-radius: 8px;
       padding: 12px 14px;
       font-size: 0.9rem;
-      color: #90ee90;
+      color: #f97316;
       margin-bottom: 28px;
       font-weight: 600;
       word-break: break-word;
     }
     .current-label {
       font-size: 0.72rem;
-      color: #555;
+      color: #444;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 6px;
@@ -86,19 +90,20 @@
     input[type="number"] {
       width: 100%;
       padding: 12px 14px;
-      background: #111;
-      border: 1px solid #333;
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
       border-radius: 8px;
       color: #f0f0f0;
       font-size: 1rem;
       outline: none;
+      transition: border-color 0.15s;
     }
     input[type="text"]:focus,
-    input[type="number"]:focus { border-color: #555; }
+    input[type="number"]:focus { border-color: #f97316; }
 
     .divider {
       border: none;
-      border-top: 1px solid #222;
+      border-top: 1px solid #1a1a1a;
       margin: 28px 0;
     }
     .constraints-row {
@@ -106,23 +111,22 @@
       gap: 8px;
       margin-top: 12px;
     }
-    .constraints-row input {
-      flex: 1;
-    }
+    .constraints-row input { flex: 1; }
     .add-btn {
       margin-top: 0;
       width: auto;
       padding: 12px 18px;
       font-size: 0.9rem;
-      background: #1a3a1a;
-      color: #6aee6a;
-      border: 1px solid #2a6a2a;
+      background: #1a0d00;
+      color: #f97316;
+      border: 1px solid #7a3a00;
       border-radius: 8px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
+      transition: background 0.15s;
     }
-    .add-btn:hover { background: #1f4a1f; }
+    .add-btn:hover { background: #2a1500; }
     .chips {
       display: flex;
       flex-wrap: wrap;
@@ -134,9 +138,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #1a1a3a;
-      border: 1px solid #2a2a6a;
-      color: #a78bfa;
+      background: #1a0d00;
+      border: 1px solid #3d1f00;
+      color: #fb923c;
       font-size: 0.8rem;
       padding: 4px 10px;
       border-radius: 20px;
@@ -145,23 +149,24 @@
     .chip-remove {
       background: none;
       border: none;
-      color: #a78bfa;
+      color: #f97316;
       cursor: pointer;
       font-size: 1rem;
       line-height: 1;
       padding: 0;
       margin: 0;
       width: auto;
+      transition: color 0.15s;
     }
-    .chip-remove:hover { color: #f88; }
+    .chip-remove:hover { color: #f87171; }
     .no-constraints {
       font-size: 0.8rem;
-      color: #444;
+      color: #333;
       font-style: italic;
     }
     .constraint-error {
       font-size: 0.78rem;
-      color: #f88;
+      color: #f87171;
       margin-top: 6px;
       display: none;
     }
@@ -169,11 +174,12 @@
 </head>
 <body>
   <div class="card">
-    <h1>Admin — Target Sentence</h1>
+    <div class="logo">Blue Schwan</div>
+    <h1>Admin Panel</h1>
     <p class="subtitle">Changes take effect immediately for all new game sessions.</p>
 
     {% if saved %}
-    <div class="success">Saved! New target sentence is now live.</div>
+    <div class="success">Saved! Settings are now live.</div>
     {% endif %}
 
     <div class="current-label">Current sentence</div>
@@ -194,15 +200,7 @@
       <div class="current-box">{{ current_max_attempts }}</div>
 
       <label for="max_attempts">Max attempts per player</label>
-      <input
-        type="number"
-        id="max_attempts"
-        name="max_attempts"
-        min="1"
-        max="10"
-        required
-        value="{{ current_max_attempts }}"
-      />
+      <input type="number" id="max_attempts" name="max_attempts" min="1" max="10" required value="{{ current_max_attempts }}" />
 
       <hr class="divider" />
 
@@ -210,14 +208,7 @@
       <div class="current-box">{{ current_max_input_tokens }}</div>
 
       <label for="max_input_tokens">Max input tokens per attempt</label>
-      <input
-        type="number"
-        id="max_input_tokens"
-        name="max_input_tokens"
-        min="1"
-        required
-        value="{{ current_max_input_tokens }}"
-      />
+      <input type="number" id="max_input_tokens" name="max_input_tokens" min="1" required value="{{ current_max_input_tokens }}" />
 
       <hr class="divider" />
 
@@ -225,14 +216,7 @@
       <div class="current-box">{{ current_game_duration }}s ({{ (current_game_duration // 60) }}m {{ current_game_duration % 60 }}s)</div>
 
       <label for="game_duration_seconds">Game duration per player (seconds)</label>
-      <input
-        type="number"
-        id="game_duration_seconds"
-        name="game_duration_seconds"
-        min="30"
-        required
-        value="{{ current_game_duration }}"
-      />
+      <input type="number" id="game_duration_seconds" name="game_duration_seconds" min="30" required value="{{ current_game_duration }}" />
 
       <hr class="divider" />
 
@@ -240,14 +224,7 @@
       <div class="current-box">{{ current_model }}</div>
 
       <label for="model">OpenAI model</label>
-      <input
-        type="text"
-        id="model"
-        name="model"
-        required
-        placeholder="e.g. gpt-4o-mini, gpt-4o, gpt-5"
-        value="{{ current_model }}"
-      />
+      <input type="text" id="model" name="model" required placeholder="e.g. gpt-4o-mini, gpt-4o, gpt-5" value="{{ current_model }}" />
 
       <button type="submit">Save &amp; Go Live</button>
     </form>
@@ -255,7 +232,7 @@
     <hr class="divider" />
 
     <label>Constraints</label>
-    <p style="font-size:0.78rem;color:#555;margin-bottom:10px;">
+    <p style="font-size:0.78rem;color:#444;margin-bottom:10px;">
       Players cannot use these words in their prompts. Takes effect immediately.
     </p>
 
@@ -330,7 +307,6 @@
       `).join("");
     }
 
-    // Allow pressing Enter in constraint input
     document.getElementById("constraint-input").addEventListener("keydown", e => {
       if (e.key === "Enter") { e.preventDefault(); addConstraint(); }
     });

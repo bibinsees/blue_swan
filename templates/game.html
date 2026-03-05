@@ -256,17 +256,14 @@
     <div class="sentence">{{ target_sentence }}</div>
   </div>
 
+  {% if constraints %}
   <div class="rules-box">
     <div class="rules-label">Rules</div>
     <div class="rules-line">
-      Maximum <strong>{{ max_input_tokens }} tokens</strong> per prompt.
-    </div>
-    {% if constraints %}
-    <div class="rules-line">
       You can't use the words <span class="banned">{{ constraints | join(', ') }}</span> in your prompt.
     </div>
-    {% endif %}
   </div>
+  {% endif %}
 
   <div class="attempts-section">
     <h2>Your Attempts</h2>

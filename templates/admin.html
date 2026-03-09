@@ -8,307 +8,411 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: sans-serif;
-      background: #0a0a0a;
-      color: #f0f0f0;
+      background: #f5f5f5;
+      color: #111;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      padding: 32px 24px;
     }
-    .card {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 32px 28px;
-      width: 100%;
-      max-width: 520px;
+    .page-header {
+      max-width: 640px;
+      margin: 0 auto 28px auto;
     }
     .logo { font-size: 1rem; font-weight: 800; color: #f97316; margin-bottom: 4px; }
-    h1 { font-size: 1.3rem; color: #fff; margin-bottom: 6px; }
-    .subtitle { font-size: 0.82rem; color: #555; margin-bottom: 28px; }
-    label { display: block; font-size: 0.78rem; color: #777; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
-    textarea {
-      width: 100%;
-      min-height: 80px;
-      background: #0a0a0a;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      color: #f0f0f0;
-      font-size: 1rem;
-      padding: 12px 14px;
-      resize: vertical;
-      outline: none;
-      font-family: sans-serif;
-      line-height: 1.5;
-      transition: border-color 0.15s;
+    h1 { font-size: 1.4rem; color: #111; font-weight: 700; margin-bottom: 4px; }
+    .subtitle { font-size: 0.82rem; color: #888; }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 28px;
+      max-width: 640px;
+      margin: 0 auto 24px auto;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
     }
-    textarea:focus { border-color: #f97316; }
-    button {
-      margin-top: 16px;
-      width: 100%;
-      padding: 13px;
-      background: #f97316;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
+    .card-title {
+      font-size: 0.78rem;
       font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
     }
-    button:hover { background: #fb923c; }
-    button:active { background: #ea580c; }
     .success {
-      background: #1a0d00;
-      border: 1px solid #7a3a00;
-      color: #f97316;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #ea580c;
       padding: 10px 14px;
       border-radius: 8px;
       font-size: 0.85rem;
       margin-bottom: 20px;
     }
-    .current-box {
-      background: #0a0a0a;
-      border: 1px solid #1e1e1e;
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-size: 0.9rem;
-      color: #f97316;
-      margin-bottom: 28px;
-      font-weight: 600;
-      word-break: break-word;
-    }
-    .current-label {
-      font-size: 0.72rem;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    label {
+      display: block;
+      font-size: 0.78rem;
+      color: #777;
       margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
     }
-    input[type="text"],
-    input[type="number"] {
+    input[type="text"], input[type="number"], textarea {
       width: 100%;
-      padding: 12px 14px;
-      background: #0a0a0a;
-      border: 1px solid #2a2a2a;
+      padding: 11px 13px;
+      background: #fafafa;
+      border: 1px solid #ddd;
       border-radius: 8px;
-      color: #f0f0f0;
-      font-size: 1rem;
+      color: #111;
+      font-size: 0.95rem;
       outline: none;
+      font-family: sans-serif;
       transition: border-color 0.15s;
     }
-    input[type="text"]:focus,
-    input[type="number"]:focus { border-color: #f97316; }
-
-    .divider {
+    input:focus, textarea:focus { border-color: #f97316; background: #fff; }
+    textarea { min-height: 72px; resize: vertical; line-height: 1.5; }
+    .form-row { margin-bottom: 18px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+    .save-btn {
+      width: 100%;
+      padding: 13px;
+      background: #f97316;
+      color: #fff;
       border: none;
-      border-top: 1px solid #1a1a1a;
-      margin: 28px 0;
-    }
-    .constraints-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .constraints-row input { flex: 1; }
-    .add-btn {
-      margin-top: 0;
-      width: auto;
-      padding: 12px 18px;
-      font-size: 0.9rem;
-      background: #1a0d00;
-      color: #f97316;
-      border: 1px solid #7a3a00;
       border-radius: 8px;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      white-space: nowrap;
+      transition: background 0.15s;
+      margin-top: 6px;
+    }
+    .save-btn:hover { background: #ea580c; }
+    .save-btn:active { background: #c2410c; }
+    .divider { border: none; border-top: 1px solid #f0f0f0; margin: 22px 0; }
+
+    /* Level cards */
+    .level-card {
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .level-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .level-badge {
+      background: #f97316;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .remove-level-btn {
+      background: none;
+      border: 1px solid #fca5a5;
+      color: #dc2626;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
       transition: background 0.15s;
     }
-    .add-btn:hover { background: #2a1500; }
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-      min-height: 32px;
+    .remove-level-btn:hover { background: #fef2f2; }
+    .save-sentence-btn {
+      margin-top: 8px;
+      padding: 7px 14px;
+      background: #f97316;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
     }
+    .save-sentence-btn:hover { background: #ea580c; }
+    .saved-hint {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: #16a34a;
+      margin-left: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .saved-hint.show { opacity: 1; }
+
+    /* Chips */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; min-height: 28px; }
     .chip {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: #1a0d00;
-      border: 1px solid #3d1f00;
-      color: #fb923c;
-      font-size: 0.8rem;
-      padding: 4px 10px;
+      gap: 5px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #ea580c;
+      font-size: 0.78rem;
+      padding: 3px 10px;
       border-radius: 20px;
       font-weight: 600;
     }
     .chip-remove {
-      background: none;
-      border: none;
+      background: none; border: none; color: #f97316;
+      cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; margin: 0; width: auto;
+    }
+    .chip-remove:hover { color: #dc2626; }
+    .no-constraints { font-size: 0.78rem; color: #bbb; font-style: italic; }
+    .constraint-row { display: flex; gap: 8px; margin-top: 10px; }
+    .constraint-row input { flex: 1; }
+    .add-constraint-btn {
+      padding: 10px 14px;
+      background: #fff7ed;
       color: #f97316;
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
       cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-      padding: 0;
-      margin: 0;
-      width: auto;
-      transition: color 0.15s;
+      white-space: nowrap;
+      transition: background 0.15s;
     }
-    .chip-remove:hover { color: #f87171; }
-    .no-constraints {
-      font-size: 0.8rem;
-      color: #333;
-      font-style: italic;
+    .add-constraint-btn:hover { background: #ffedd5; }
+    .constraint-error { font-size: 0.75rem; color: #dc2626; margin-top: 4px; display: none; }
+
+    /* Add level */
+    .add-level-area { margin-top: 4px; }
+    .add-level-area textarea { margin-bottom: 10px; }
+    .add-level-btn {
+      padding: 11px 20px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
     }
-    .constraint-error {
-      font-size: 0.78rem;
-      color: #f87171;
-      margin-top: 6px;
-      display: none;
-    }
+    .add-level-btn:hover { background: #333; }
   </style>
 </head>
 <body>
-  <div class="card">
+
+  <div class="page-header">
     <div class="logo">Blue Schwan</div>
     <h1>Admin Panel</h1>
-    <p class="subtitle">Changes take effect immediately for all new game sessions.</p>
+    <p class="subtitle">Changes take effect immediately for new game sessions.</p>
+  </div>
+
+  <!-- Global settings -->
+  <div class="card">
+    <div class="card-title">Global Settings</div>
 
     {% if saved %}
-    <div class="success">Saved! Settings are now live.</div>
+    <div class="success">Settings saved and live!</div>
     {% endif %}
 
-    <div class="current-label">Current sentence</div>
-    <div class="current-box">{{ current_sentence or "— not set —" }}</div>
-
     <form method="POST" action="/admin">
-      <label for="target_sentence">Target sentence</label>
-      <textarea
-        id="target_sentence"
-        name="target_sentence"
-        required
-        placeholder="Type the exact sentence players must generate…"
-      >{{ current_sentence }}</textarea>
-
-      <hr class="divider" />
-
-      <div class="current-label">Current max attempts</div>
-      <div class="current-box">{{ current_max_attempts }}</div>
-
-      <label for="max_attempts">Max attempts per player</label>
-      <input type="number" id="max_attempts" name="max_attempts" min="1" max="10" required value="{{ current_max_attempts }}" />
-
-      <hr class="divider" />
-
-      <div class="current-label">Current max input tokens</div>
-      <div class="current-box">{{ current_max_input_tokens }}</div>
-
-      <label for="max_input_tokens">Max input tokens per attempt</label>
-      <input type="number" id="max_input_tokens" name="max_input_tokens" min="1" required value="{{ current_max_input_tokens }}" />
-
-      <hr class="divider" />
-
-      <div class="current-label">Current game duration (seconds)</div>
-      <div class="current-box">{{ current_game_duration }}s ({{ (current_game_duration // 60) }}m {{ current_game_duration % 60 }}s)</div>
-
-      <label for="game_duration_seconds">Game duration per player (seconds)</label>
-      <input type="number" id="game_duration_seconds" name="game_duration_seconds" min="30" required value="{{ current_game_duration }}" />
-
-      <hr class="divider" />
-
-      <div class="current-label">Current model</div>
-      <div class="current-box">{{ current_model }}</div>
-
-      <label for="model">OpenAI model</label>
-      <input type="text" id="model" name="model" required placeholder="e.g. gpt-4o-mini, gpt-4o, gpt-5" value="{{ current_model }}" />
-
-      <button type="submit">Save &amp; Go Live</button>
+      <div class="form-grid">
+        <div>
+          <label for="max_attempts">Max attempts per level</label>
+          <input type="number" id="max_attempts" name="max_attempts" min="1" max="20" required value="{{ current_max_attempts }}" />
+        </div>
+        <div>
+          <label for="max_input_tokens">Max input tokens</label>
+          <input type="number" id="max_input_tokens" name="max_input_tokens" min="1" required value="{{ current_max_input_tokens }}" />
+        </div>
+        <div>
+          <label for="game_duration_seconds">Game duration per level (s)</label>
+          <input type="number" id="game_duration_seconds" name="game_duration_seconds" min="30" required value="{{ current_game_duration }}" />
+        </div>
+        <div>
+          <label for="model">OpenAI model</label>
+          <input type="text" id="model" name="model" required placeholder="gpt-4o-mini" value="{{ current_model }}" />
+        </div>
+      </div>
+      <button type="submit" class="save-btn">Save Global Settings</button>
     </form>
+  </div>
+
+  <!-- Levels -->
+  <div class="card">
+    <div class="card-title">Levels &amp; Target Sentences</div>
+
+    <div id="levels-container">
+      {% for lvl in levels %}
+      <div class="level-card" id="level-card-{{ lvl.id }}">
+        <div class="level-card-header">
+          <span class="level-badge">Level {{ lvl.level_number }}</span>
+          {% if levels|length > 1 %}
+          <button class="remove-level-btn" onclick="removeLevel({{ lvl.id }})">Remove Level</button>
+          {% endif %}
+        </div>
+
+        <div class="form-row">
+          <label>Target Sentence</label>
+          <textarea id="sentence-{{ lvl.id }}" rows="2">{{ lvl.target_sentence }}</textarea>
+          <div style="margin-top:8px;display:flex;align-items:center;">
+            <button class="save-sentence-btn" onclick="saveSentence({{ lvl.id }})">Save Sentence</button>
+            <span class="saved-hint" id="saved-hint-{{ lvl.id }}">Saved ✓</span>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <label>Forbidden Words</label>
+        <div class="chips" id="chips-{{ lvl.id }}">
+          {% if lvl.constraints %}
+            {% for word in lvl.constraints %}
+            <span class="chip">{{ word }}<button class="chip-remove" onclick="removeConstraint({{ lvl.id }}, '{{ word }}')">×</button></span>
+            {% endfor %}
+          {% else %}
+            <span class="no-constraints" id="no-c-{{ lvl.id }}">No constraints set.</span>
+          {% endif %}
+        </div>
+        <div class="constraint-row">
+          <input type="text" id="c-input-{{ lvl.id }}" placeholder="e.g. please" />
+          <button class="add-constraint-btn" onclick="addConstraint({{ lvl.id }})">+ Add</button>
+        </div>
+        <div class="constraint-error" id="c-error-{{ lvl.id }}"></div>
+      </div>
+      {% endfor %}
+    </div>
 
     <hr class="divider" />
 
-    <label>Constraints</label>
-    <p style="font-size:0.78rem;color:#444;margin-bottom:10px;">
-      Players cannot use these words in their prompts. Takes effect immediately.
-    </p>
-
-    <div class="chips" id="chips-container">
-      {% if current_constraints %}
-        {% for word in current_constraints %}
-        <span class="chip" id="chip-{{ word }}">
-          {{ word }}
-          <button class="chip-remove" onclick="removeConstraint('{{ word }}')" title="Remove">×</button>
-        </span>
-        {% endfor %}
-      {% else %}
-        <span class="no-constraints" id="no-constraints-msg">No constraints set.</span>
-      {% endif %}
+    <div class="add-level-area">
+      <label>Add New Level</label>
+      <textarea id="new-level-sentence" placeholder="Type the target sentence for the new level…" rows="2"></textarea>
+      <button class="add-level-btn" onclick="addLevel()">+ Add Level</button>
     </div>
-
-    <div class="constraints-row">
-      <input type="text" id="constraint-input" placeholder="e.g. please" />
-      <button class="add-btn" onclick="addConstraint()">+ Add</button>
-    </div>
-    <div class="constraint-error" id="constraint-error"></div>
   </div>
 
   <script>
-    async function addConstraint() {
-      const input = document.getElementById("constraint-input");
-      const errorEl = document.getElementById("constraint-error");
+    // ── Sentence save ─────────────────────────────────────────────────────────
+    async function saveSentence(levelId) {
+      const sentence = document.getElementById(`sentence-${levelId}`).value.trim();
+      if (!sentence) return;
+      const form = new FormData();
+      form.append("level_id", levelId);
+      form.append("target_sentence", sentence);
+      await fetch("/api/levels/update-sentence", { method: "POST", body: form });
+      const hint = document.getElementById(`saved-hint-${levelId}`);
+      hint.classList.add("show");
+      setTimeout(() => hint.classList.remove("show"), 2000);
+    }
+
+    // ── Level add/remove ──────────────────────────────────────────────────────
+    async function addLevel() {
+      const sentence = document.getElementById("new-level-sentence").value.trim();
+      if (!sentence) return;
+      const form = new FormData();
+      form.append("target_sentence", sentence);
+      const res = await fetch("/api/levels/add", { method: "POST", body: form });
+      const data = await res.json();
+      if (data.error) { alert(data.error); return; }
+      document.getElementById("new-level-sentence").value = "";
+      renderLevels(data.levels);
+    }
+
+    async function removeLevel(levelId) {
+      if (!confirm("Remove this level? This cannot be undone.")) return;
+      const form = new FormData();
+      form.append("level_id", levelId);
+      const res = await fetch("/api/levels/remove", { method: "POST", body: form });
+      const data = await res.json();
+      if (data.error) { alert(data.error); return; }
+      renderLevels(data.levels);
+    }
+
+    // ── Constraints ───────────────────────────────────────────────────────────
+    async function addConstraint(levelId) {
+      const input = document.getElementById(`c-input-${levelId}`);
+      const errorEl = document.getElementById(`c-error-${levelId}`);
       const word = input.value.trim().toLowerCase();
       errorEl.style.display = "none";
-
       if (!word) return;
-      if (word.includes(" ")) {
-        errorEl.textContent = "Enter a single word only.";
-        errorEl.style.display = "block";
-        return;
-      }
-
+      if (word.includes(" ")) { errorEl.textContent = "Single word only."; errorEl.style.display = "block"; return; }
       const form = new FormData();
       form.append("word", word);
-      const res = await fetch("/api/constraints/add", { method: "POST", body: form });
+      const res = await fetch(`/api/levels/${levelId}/constraints/add`, { method: "POST", body: form });
       const data = await res.json();
-
-      if (data.error) {
-        errorEl.textContent = data.error;
-        errorEl.style.display = "block";
-        return;
-      }
-
+      if (data.error) { errorEl.textContent = data.error; errorEl.style.display = "block"; return; }
       input.value = "";
-      renderChips(data.constraints);
+      renderChips(levelId, data.constraints);
     }
 
-    async function removeConstraint(word) {
+    async function removeConstraint(levelId, word) {
       const form = new FormData();
       form.append("word", word);
-      const res = await fetch("/api/constraints/remove", { method: "POST", body: form });
+      const res = await fetch(`/api/levels/${levelId}/constraints/remove`, { method: "POST", body: form });
       const data = await res.json();
-      renderChips(data.constraints);
+      renderChips(levelId, data.constraints);
     }
 
-    function renderChips(words) {
-      const container = document.getElementById("chips-container");
+    function renderChips(levelId, words) {
+      const container = document.getElementById(`chips-${levelId}`);
+      if (!container) return;
       if (words.length === 0) {
-        container.innerHTML = '<span class="no-constraints" id="no-constraints-msg">No constraints set.</span>';
+        container.innerHTML = `<span class="no-constraints">No constraints set.</span>`;
         return;
       }
-      container.innerHTML = words.map(w => `
-        <span class="chip" id="chip-${w}">
-          ${w}
-          <button class="chip-remove" onclick="removeConstraint('${w}')" title="Remove">×</button>
-        </span>
+      container.innerHTML = words.map(w =>
+        `<span class="chip">${w}<button class="chip-remove" onclick="removeConstraint(${levelId},'${w}')">×</button></span>`
+      ).join("");
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    // ── Re-render level cards after add/remove ────────────────────────────────
+    function renderLevels(levels) {
+      const container = document.getElementById("levels-container");
+      container.innerHTML = levels.map(lvl => `
+        <div class="level-card" id="level-card-${lvl.id}">
+          <div class="level-card-header">
+            <span class="level-badge">Level ${lvl.level_number}</span>
+            ${levels.length > 1
+              ? `<button class="remove-level-btn" onclick="removeLevel(${lvl.id})">Remove Level</button>`
+              : ""}
+          </div>
+          <div class="form-row">
+            <label>Target Sentence</label>
+            <textarea id="sentence-${lvl.id}" rows="2">${escHtml(lvl.target_sentence)}</textarea>
+            <div style="margin-top:8px;display:flex;align-items:center;">
+              <button class="save-sentence-btn" onclick="saveSentence(${lvl.id})">Save Sentence</button>
+              <span class="saved-hint" id="saved-hint-${lvl.id}">Saved ✓</span>
+            </div>
+          </div>
+          <hr class="divider" />
+          <label>Forbidden Words</label>
+          <div class="chips" id="chips-${lvl.id}">
+            ${lvl.constraints.length === 0
+              ? `<span class="no-constraints">No constraints set.</span>`
+              : lvl.constraints.map(w =>
+                  `<span class="chip">${escHtml(w)}<button class="chip-remove" onclick="removeConstraint(${lvl.id},'${w}')">×</button></span>`
+                ).join("")}
+          </div>
+          <div class="constraint-row">
+            <input type="text" id="c-input-${lvl.id}" placeholder="e.g. please" onkeydown="if(event.key==='Enter'){event.preventDefault();addConstraint(${lvl.id});}" />
+            <button class="add-constraint-btn" onclick="addConstraint(${lvl.id})">+ Add</button>
+          </div>
+          <div class="constraint-error" id="c-error-${lvl.id}"></div>
+        </div>
       `).join("");
     }
 
-    document.getElementById("constraint-input").addEventListener("keydown", e => {
-      if (e.key === "Enter") { e.preventDefault(); addConstraint(); }
+    // Allow Enter key on constraint inputs (for server-rendered ones)
+    document.querySelectorAll("[id^='c-input-']").forEach(el => {
+      const levelId = el.id.replace("c-input-", "");
+      el.addEventListener("keydown", e => {
+        if (e.key === "Enter") { e.preventDefault(); addConstraint(Number(levelId)); }
+      });
     });
   </script>
 </body>

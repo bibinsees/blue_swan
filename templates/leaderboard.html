@@ -17,139 +17,74 @@
     .layout {
       display: flex;
       gap: 48px;
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       align-items: flex-start;
     }
 
     /* Left column – QR */
-    .qr-col {
-      flex: 0 0 220px;
-      text-align: center;
-    }
+    .qr-col { flex: 0 0 220px; text-align: center; }
     .qr-col .qr-label {
-      font-size: 0.78rem;
-      color: #555;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 14px;
+      font-size: 0.78rem; color: #555; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 14px;
     }
     .qr-col img {
-      width: 200px;
-      height: 200px;
-      border-radius: 12px;
-      border: 3px solid #f97316;
-      display: block;
-      margin: 0 auto;
+      width: 200px; height: 200px; border-radius: 12px;
+      border: 3px solid #f97316; display: block; margin: 0 auto;
     }
-    .qr-col .scan-text {
-      margin-top: 12px;
-      font-size: 0.9rem;
-      color: #f97316;
-      font-weight: 700;
-    }
-    .qr-col .url-text {
-      margin-top: 6px;
-      font-size: 0.68rem;
-      color: #444;
-      word-break: break-all;
-    }
+    .qr-col .scan-text { margin-top: 12px; font-size: 0.9rem; color: #f97316; font-weight: 700; }
+    .qr-col .url-text { margin-top: 6px; font-size: 0.68rem; color: #444; word-break: break-all; }
 
     /* Right column – Leaderboard */
     .board-col { flex: 1; }
-    .board-col .logo {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #f97316;
-      margin-bottom: 4px;
+    .board-col .logo { font-size: 1rem; font-weight: 800; color: #f97316; margin-bottom: 4px; }
+    .board-col h1 { font-size: 2rem; color: #fff; margin-bottom: 4px; font-weight: 800; }
+    .board-col .subtitle { font-size: 0.85rem; color: #444; margin-bottom: 28px; }
+
+    /* Level section */
+    .level-section { margin-bottom: 32px; }
+    .level-section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #1a1a1a;
     }
-    .board-col h1 {
-      font-size: 2rem;
+    .level-section-badge {
+      background: #f97316;
       color: #fff;
-      margin-bottom: 4px;
-      font-weight: 800;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
     }
-    .board-col .subtitle {
-      font-size: 0.85rem;
-      color: #444;
-      margin-bottom: 28px;
-    }
+    .level-section-label { font-size: 0.85rem; color: #555; }
 
-    .empty-msg {
-      color: #333;
-      font-size: 1rem;
-      padding: 20px 0;
-    }
+    .empty-msg { color: #333; font-size: 1rem; padding: 20px 0; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
     thead th {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #444;
-      text-align: left;
-      padding: 0 12px 12px 12px;
-      border-bottom: 1px solid #1a1a1a;
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #444; text-align: left; padding: 0 12px 10px 12px;
     }
-    tbody tr {
-      border-top: 1px solid #111;
-      transition: background 0.15s;
-    }
+    tbody tr { border-top: 1px solid #111; transition: background 0.15s; }
     tbody tr:first-child { border-top: none; }
     tbody tr:hover { background: #0f0f0f; }
+    tbody td { padding: 13px 12px; font-size: 1rem; vertical-align: middle; }
 
-    tbody td {
-      padding: 14px 12px;
-      font-size: 1rem;
-      vertical-align: middle;
-    }
-
-    .rank-cell {
-      font-size: 1.4rem;
-      font-weight: 800;
-      width: 56px;
-      color: #222;
-    }
+    .rank-cell { font-size: 1.4rem; font-weight: 800; width: 52px; color: #222; }
     .rank-1 { color: #f97316; }
     .rank-2 { color: #b0b0b0; }
     .rank-3 { color: #cd7f32; }
 
-    .username-cell {
-      font-weight: 700;
-      color: #fff;
-      font-size: 1.1rem;
-    }
-    .org-cell {
-      font-size: 1rem;
-      color: #ffbb00d0;
-    }
-    .tokens-cell {
-      text-align: right;
-      font-size: 1rem;
-      color: #f97316;
-      font-weight: 700;
-    }
-    .tokens-cell .unit {
-      font-size: 0.72rem;
-      color: #444;
-      font-weight: 400;
-      margin-left: 4px;
-    }
-    .time-cell {
-      text-align: right;
-      font-size: 0.9rem;
-      color: #555;
-      font-weight: 500;
-    }
+    .username-cell { font-weight: 700; color: #fff; font-size: 1.05rem; }
+    .org-cell { font-size: 0.9rem; color: #ffbb00d0; }
+    .tokens-cell { text-align: right; font-size: 1rem; color: #f97316; font-weight: 700; }
+    .tokens-cell .unit { font-size: 0.72rem; color: #444; font-weight: 400; margin-left: 4px; }
+    .time-cell { text-align: right; font-size: 0.9rem; color: #555; font-weight: 500; }
 
-    .last-updated {
-      margin-top: 24px;
-      font-size: 0.72rem;
-      color: #2a2a2a;
-    }
+    .last-updated { margin-top: 24px; font-size: 0.72rem; color: #2a2a2a; }
   </style>
 </head>
 <body>
@@ -171,34 +106,47 @@
     <div class="board-col">
       <div class="logo">Blue Schwan</div>
       <h1>Leaderboard</h1>
-      <p class="subtitle">Fewest input tokens wins. Only exact matches count.</p>
+      <p class="subtitle">Fewest avg tokens wins across all completed levels.</p>
 
       <div id="board-container">
         {% if leaderboard %}
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Player</th>
-              <th>Firma / Organisation</th>
-              <th style="text-align:right">Best Tokens</th>
-              <th style="text-align:right">Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in leaderboard %}
-            <tr>
-              <td class="rank-cell rank-{{ row.rank }}">{{ row.rank }}</td>
-              <td class="username-cell">{{ row.username }}</td>
-              <td class="org-cell">{{ row.organisation or '—' }}</td>
-              <td class="tokens-cell">{{ row.best_tokens }}<span class="unit">tokens</span></td>
-              <td class="time-cell">{{ row.time_seconds }}s</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+          {% for lvl_num in range(total_levels, 0, -1) %}
+            {% set section_entries = leaderboard | selectattr("highest_level", "equalto", lvl_num) | list %}
+            {% if section_entries %}
+            <div class="level-section">
+              <div class="level-section-header">
+                <span class="level-section-badge">Level {{ lvl_num }}</span>
+                <span class="level-section-label">
+                  {% if lvl_num == total_levels %}Champions{% else %}Passed{% endif %}
+                </span>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Firma / Organisation</th>
+                    <th style="text-align:right">Avg Tokens</th>
+                    <th style="text-align:right">Avg Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in section_entries %}
+                  <tr>
+                    <td class="rank-cell rank-{{ row.rank }}">{{ row.rank }}</td>
+                    <td class="username-cell">{{ row.username }}</td>
+                    <td class="org-cell">{{ row.organisation or '—' }}</td>
+                    <td class="tokens-cell">{{ row.best_avg_tokens }}<span class="unit">tokens</span></td>
+                    <td class="time-cell">{{ row.best_avg_time | round | int }}s</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% endif %}
+          {% endfor %}
         {% else %}
-        <div class="empty-msg">No exact matches yet. Be the first!</div>
+          <div class="empty-msg">No exact matches yet. Be the first!</div>
         {% endif %}
       </div>
 
@@ -210,65 +158,71 @@
   <script>
     function fmtTime(s) {
       if (s === null || s === undefined) return "—";
-      if (s < 60) return s + "s";
-      return Math.floor(s / 60) + "m " + (s % 60) + "s";
+      const r = Math.round(s);
+      if (r < 60) return r + "s";
+      return Math.floor(r / 60) + "m " + (r % 60) + "s";
     }
 
     async function refresh() {
       try {
         const res = await fetch("/api/leaderboard");
-        const data = await res.json();
-
+        const json = await res.json();
+        const data = json.entries;
+        const totalLevels = json.total_levels;
         const container = document.getElementById("board-container");
 
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
           container.innerHTML = '<div class="empty-msg">No exact matches yet. Be the first!</div>';
-        } else {
-          const rows = data.map(row => `
-            <tr>
-              <td class="rank-cell rank-${row.rank}">${row.rank}</td>
-              <td class="username-cell">${escapeHtml(row.username)}</td>
-              <td class="org-cell">${row.organisation ? escapeHtml(row.organisation) : "—"}</td>
-              <td class="tokens-cell">${row.best_tokens}<span class="unit">tokens</span></td>
-              <td class="time-cell">${fmtTime(row.time_seconds)}</td>
-            </tr>
-          `).join("");
-
-          container.innerHTML = `
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Player</th>
-                  <th>Firma / Organisation</th>
-                  <th style="text-align:right">Best Tokens</th>
-                  <th style="text-align:right">Time</th>
-                </tr>
-              </thead>
-              <tbody>${rows}</tbody>
-            </table>
-          `;
+          document.getElementById("last-updated").textContent = "Last updated: " + new Date().toLocaleTimeString();
+          return;
         }
 
-        document.getElementById("last-updated").textContent =
-          "Last updated: " + new Date().toLocaleTimeString();
-
+        let html = "";
+        for (let lvl = totalLevels; lvl >= 1; lvl--) {
+          const entries = data.filter(r => r.highest_level === lvl);
+          if (entries.length === 0) continue;
+          html += `
+            <div class="level-section">
+              <div class="level-section-header">
+                <span class="level-section-badge">Level ${lvl}</span>
+                <span class="level-section-label">${lvl === totalLevels ? "Champions" : "Passed"}</span>
+              </div>
+              <table>
+                <thead><tr>
+                  <th>#</th><th>Player</th><th>Firma / Organisation</th>
+                  <th style="text-align:right">Avg Tokens</th>
+                  <th style="text-align:right">Avg Time</th>
+                </tr></thead>
+                <tbody>
+                  ${entries.map(row => `
+                    <tr>
+                      <td class="rank-cell rank-${row.rank}">${row.rank}</td>
+                      <td class="username-cell">${escapeHtml(row.username)}</td>
+                      <td class="org-cell">${row.organisation ? escapeHtml(row.organisation) : "—"}</td>
+                      <td class="tokens-cell">${row.best_avg_tokens}<span class="unit">tokens</span></td>
+                      <td class="time-cell">${fmtTime(row.best_avg_time)}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          `;
+        }
+        container.innerHTML = html;
+        document.getElementById("last-updated").textContent = "Last updated: " + new Date().toLocaleTimeString();
       } catch (e) {
-        // silently ignore fetch errors, will retry
+        // silently retry
       }
     }
 
     function escapeHtml(str) {
       return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
 
     setInterval(refresh, 5000);
-    document.getElementById("last-updated").textContent =
-      "Last updated: " + new Date().toLocaleTimeString();
+    document.getElementById("last-updated").textContent = "Last updated: " + new Date().toLocaleTimeString();
   </script>
 </body>
 </html>

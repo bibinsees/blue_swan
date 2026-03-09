@@ -37,8 +37,6 @@ Admin: http://localhost:8000/admin
 Leaderboard: http://localhost:8000/leaderboard
 
 
-
-
 # main branch
 Its the basic version. where players can play only using local machine, that is only one player at the time.
 # local_host branch
@@ -47,10 +45,13 @@ code is written such a way that server connection only works if the laptop's hot
 Tasks to be done 
 more rules:
 
-5. turn the ui into cairo theme.
-6. more closer means cosine distance calc need to be done. 
+3. remove email id
+0. add readme , turn current readme for only readable by admin.
+2. add whats the game before going to (landing page)
+1. change the font on leaderboard into white ui
+6. more closer means cosine distance calc need to be done. better maybe blue score ngram overlap because ("The cat sat on the mat" vs "The feline rested on the rug" → very high score in semantic similarity which we dont want.
 0. make first round simple then increase difficulty. 2. how many rounds/sessions/target sentence should be there?
-2. Add the leader board link in user game page. (this wait for the monitor, because if its public then no more changes/manipulation by admin)
+2. Add the leader board link in user game page. at the end session expired also after attempts finished.
 
 
 
@@ -61,3 +62,6 @@ more rules:
 
 
 # input tokens calculated by  input_tokens = response.usage.prompt_tokens
+
+task done:
+5. turn the ui into cairo theme.

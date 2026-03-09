@@ -133,6 +133,7 @@ async def game_page(request: Request, player_id: int):
             "max_input_tokens": get_max_input_tokens(),
             "time_remaining_seconds": time_remaining,
             "game_duration_seconds": duration,
+            "leaderboard_url": (PUBLIC_URL.rstrip("/") + "/leaderboard") if PUBLIC_URL else "/leaderboard",
         },
     )
 

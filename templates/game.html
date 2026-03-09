@@ -313,7 +313,7 @@
     </div>
 
     {% if attempts_used >= max_attempts %}
-    <div class="done-msg">You've used all {{ max_attempts }} attempts. Check the leaderboard!</div>
+    <div class="done-msg">You've used all {{ max_attempts }} attempts. Check the <a href="{{ leaderboard_url }}" target="_blank" style="color:#f97316;font-weight:700;">leaderboard</a>!</div>
     {% else %}
     {% set remaining = max_attempts - attempts_used %}
     <div class="attempts-counter">
@@ -332,6 +332,7 @@
     const PLAYER_ID = {{ player.id }};
     let attemptsUsed = {{ attempts_used }};
     const MAX_ATTEMPTS = {{ max_attempts }};
+    const LEADERBOARD_URL = "{{ leaderboard_url }}";
 
     const submitBtn = document.getElementById("submit-btn");
     const promptInput = document.getElementById("prompt-input");
@@ -430,7 +431,7 @@
             remainingCount.textContent = data.attempts_remaining;
           } else {
             const section = document.querySelector(".prompt-section");
-            section.innerHTML = `<div class="done-msg">You've used all ${MAX_ATTEMPTS} attempts. Check the leaderboard!</div>`;
+            section.innerHTML = `<div class="done-msg">You've used all ${MAX_ATTEMPTS} attempts. Check the <a href="${LEADERBOARD_URL}" target="_blank" style="color:#f97316;font-weight:700;">leaderboard</a>!</div>`;
           }
 
         } catch (e) {
@@ -464,7 +465,7 @@
             msg.id = "timeout-msg";
             msg.className = "done-msg";
             msg.style.marginTop = "14px";
-            msg.textContent = "Your session has ended. Check the leaderboard!";
+            msg.innerHTML = `Your session has ended. Check the <a href="${LEADERBOARD_URL}" target="_blank" style="color:#f97316;font-weight:700;">leaderboard</a>!`;
             section.appendChild(msg);
           }
         }, secsLeft * 1000);

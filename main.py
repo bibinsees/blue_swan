@@ -22,7 +22,7 @@ from database import (
     get_model,
     get_player_attempts,
     get_player_by_id,
-    get_player_by_email,
+
     get_player_by_username,
     player_has_exact_match,
     get_target_sentence,
@@ -90,19 +90,17 @@ async def register_page(request: Request):
 async def register(
     request: Request,
     username: str = Form(...),
-    email: str = Form(...),
     organisation: str = Form(...),
+    email: str = Form(default=""),
 ):
     if get_player_by_username(username):
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error": "This username is already taken."},
         )
-    if get_player_by_email(email):
-        return templates.TemplateResponse(
-            "register.html",
-            {"request": request, "error": "This email is already registered."},
-        )
+    # Auto-generate a unique placeholder if email not provided
+    if not email:
+        email = f"{username.lower().replace(' ', '_')}@noemail.local"
     player_id = create_player(username, email, organisation)
     return RedirectResponse(url=f"/game/{player_id}", status_code=303)
 

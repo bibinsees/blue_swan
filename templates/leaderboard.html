@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blue Schwan – Leaderboard</title>
+  <title>Blauer Schwan – Leaderboard</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: sans-serif;
-      background: #0a0a0a;
-      color: #f0f0f0;
+      background: #f5f5f5;
+      color: #111;
       min-height: 100vh;
       padding: 40px;
     }
@@ -25,7 +25,7 @@
     /* Left column – QR */
     .qr-col { flex: 0 0 220px; text-align: center; }
     .qr-col .qr-label {
-      font-size: 0.78rem; color: #555; text-transform: uppercase;
+      font-size: 0.78rem; color: #888; text-transform: uppercase;
       letter-spacing: 0.08em; margin-bottom: 14px;
     }
     .qr-col img {
@@ -33,13 +33,13 @@
       border: 3px solid #f97316; display: block; margin: 0 auto;
     }
     .qr-col .scan-text { margin-top: 12px; font-size: 0.9rem; color: #f97316; font-weight: 700; }
-    .qr-col .url-text { margin-top: 6px; font-size: 0.68rem; color: #444; word-break: break-all; }
+    .qr-col .url-text { margin-top: 6px; font-size: 0.68rem; color: #999; word-break: break-all; }
 
     /* Right column – Leaderboard */
     .board-col { flex: 1; }
     .board-col .logo { font-size: 1rem; font-weight: 800; color: #f97316; margin-bottom: 4px; }
-    .board-col h1 { font-size: 2rem; color: #fff; margin-bottom: 4px; font-weight: 800; }
-    .board-col .subtitle { font-size: 0.85rem; color: #444; margin-bottom: 28px; }
+    .board-col h1 { font-size: 2rem; color: #111; margin-bottom: 4px; font-weight: 800; }
+    .board-col .subtitle { font-size: 0.85rem; color: #888; margin-bottom: 28px; }
 
     /* Level section */
     .level-section { margin-bottom: 32px; }
@@ -49,7 +49,7 @@
       gap: 12px;
       margin-bottom: 14px;
       padding-bottom: 10px;
-      border-bottom: 2px solid #1a1a1a;
+      border-bottom: 2px solid #e5e5e5;
     }
     .level-section-badge {
       background: #f97316;
@@ -61,30 +61,30 @@
     }
     .level-section-label { font-size: 0.85rem; color: #555; }
 
-    .empty-msg { color: #333; font-size: 1rem; padding: 20px 0; }
+    .empty-msg { color: #bbb; font-size: 1rem; padding: 20px 0; }
 
     table { width: 100%; border-collapse: collapse; }
     thead th {
       font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
-      color: #444; text-align: left; padding: 0 12px 10px 12px;
+      color: #888; text-align: left; padding: 0 12px 10px 12px;
     }
-    tbody tr { border-top: 1px solid #111; transition: background 0.15s; }
+    tbody tr { border-top: 1px solid #e5e5e5; transition: background 0.15s; }
     tbody tr:first-child { border-top: none; }
-    tbody tr:hover { background: #0f0f0f; }
+    tbody tr:hover { background: #f9f9f9; }
     tbody td { padding: 13px 12px; font-size: 1rem; vertical-align: middle; }
 
-    .rank-cell { font-size: 1.4rem; font-weight: 800; width: 52px; color: #222; }
+    .rank-cell { font-size: 1.4rem; font-weight: 800; width: 52px; color: #ccc; }
     .rank-1 { color: #f97316; }
     .rank-2 { color: #b0b0b0; }
     .rank-3 { color: #cd7f32; }
 
-    .username-cell { font-weight: 700; color: #fff; font-size: 1.05rem; }
-    .org-cell { font-size: 0.9rem; color: #ffbb00d0; }
+    .username-cell { font-weight: 700; color: #111; font-size: 1.05rem; }
+    .org-cell { font-size: 0.9rem; color: #888; }
     .tokens-cell { text-align: right; font-size: 1rem; color: #f97316; font-weight: 700; }
-    .tokens-cell .unit { font-size: 0.72rem; color: #444; font-weight: 400; margin-left: 4px; }
-    .time-cell { text-align: right; font-size: 0.9rem; color: #555; font-weight: 500; }
+    .tokens-cell .unit { font-size: 0.72rem; color: #999; font-weight: 400; margin-left: 4px; }
+    .time-cell { text-align: right; font-size: 0.9rem; color: #888; font-weight: 500; }
 
-    .last-updated { margin-top: 24px; font-size: 0.72rem; color: #2a2a2a; }
+    .last-updated { margin-top: 24px; font-size: 0.72rem; color: #bbb; }
   </style>
 </head>
 <body>
@@ -97,14 +97,14 @@
       <div class="scan-text">Join the game!</div>
       <div class="url-text">{{ register_url }}</div>
       <div style="margin-top:28px;">
-        <img src="/static/thws.jpg" alt="CAIRO & TTZ-WUE" style="width:200px;height:200px;object-fit:cover;border-radius:12px;border:3px solid #fff;display:block;margin:0 auto;" />
+        <img src="/static/thws.jpg" alt="CAIRO & TTZ-WUE" style="width:200px;height:200px;object-fit:cover;border-radius:12px;border:3px solid #e5e5e5;display:block;margin:0 auto;" />
         <div class="scan-text" style="margin-top:12px;">Powered by CAIRO &amp; TTZ-WUE</div>
       </div>
     </div>
 
     <!-- Leaderboard column -->
     <div class="board-col">
-      <div class="logo">Blue Schwan</div>
+      <div class="logo">Blauer Schwan Challenge</div>
       <h1>Leaderboard</h1>
       <p class="subtitle">Fewest avg tokens wins across all completed levels.</p>
 

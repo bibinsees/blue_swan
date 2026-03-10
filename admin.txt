@@ -1,0 +1,67 @@
+Server: http://0.0.0.0:8000 (accessible on your local network)
+
+URLs:
+
+Page	URL
+Player registration (via QR)	http://10.32.6.68:8000/
+Game page (auto after register)	http://10.32.6.68:8000/game/{id}
+Leaderboard (for main monitor)	http://10.32.6.68:8000/leaderboard
+New admin page: http://10.32.6.68:8000/admin
+To start the server next time:
+
+
+cd c:/Users/Administrator/blue_swan
+C:/ProgramData/anaconda3/python.exe main.py
+
+new:
+http://100.83.234.73:8000/
+http://100.83.234.73:8000/leaderboard
+
+new with laptop hotspot:
+Game URL: http://192.168.137.1:8000/
+Leaderboard: http://192.168.137.1:8000/leaderboard
+
+
+new: used ngrok for public url so players can join using their own network. 
+# Terminal 1 — start the tunnel
+ngrok http 8000
+
+# Copy the Forwarding URL, e.g. https://a1b2c3d4.ngrok-free.app
+# Terminal 2 — start the game server
+PUBLIC_URL=https://a1b2c3d4.ngrok-free.app python main.py
+
+above was example. below one actually working in vs code powershell terminal:
+$env:PUBLIC_URL="https://murmurous-shanta-rejoicingly.ngrok-free.dev"; C:/ProgramData/anaconda3/python.exe main.py
+
+Admin: http://localhost:8000/admin
+Leaderboard: http://localhost:8000/leaderboard
+
+
+# main branch
+Its the basic version. where players can play only using local machine, that is only one player at the time.
+# local_host branch
+code is written such a way that server connection only works if the laptop's hotspot is turned on 
+
+Tasks to be done 
+more rules:
+
+
+
+1. change to server stops at 14 Uhr.  admin can change that push that to new git branch. 
+0. add readme , turn current readme for only readable by admin.
+2. add whats the game before going to (landing page)
+1. change the font on leaderboard into white ui
+6. more closer means cosine distance calc need to be done. better maybe blue score ngram overlap because "The cat sat on the mat" vs "The feline rested on the rug" → very high score in semantic similarity which we dont want.
+8. multiturn instead of single turn
+
+
+
+
+### Decided not to:
+7. Make lower case and upper case irrelevant while matching. because if its relavant player can easily give uppercase/lowercase in the prompt and just prompt to make it lower/upper (do the opposite to generate the answer)
+8. Should we restrict encoding and decoding or - no becasue people can just give extra 'a' and ask remove 'a', so there is no way we force them to be creative like this "  if you add -, + you cant remove it using the Remove !: Bl!ue Sch!wan fliegt von Neu!schwanstein nach Schw!einfurt. Tharun said claude gave that answr. even if we do that then remove Z from all words can work. 
+
+
+
+# input tokens calculated by  input_tokens = response.usage.prompt_tokens
+09.30 Uhr bis ca. 14.00 Uhr = 4.30 hours

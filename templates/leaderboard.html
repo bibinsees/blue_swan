@@ -4,101 +4,234 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blauer Schwan – Leaderboard</title>
+  
+  <!-- Modern Dashboard Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: sans-serif;
-      background: #f5f5f5;
-      color: #111;
-      min-height: 100vh;
-      padding: 40px;
+    :root {
+      --bg-main: #09090b; /* Very Dark Zinc */
+      --bg-card: rgba(24, 24, 27, 0.65);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #fafafa;
+      --text-muted: #a1a1aa;
+      --primary: #f97316; /* Orange */
+      --primary-glow: rgba(249, 115, 22, 0.4);
+      --accent: #38bdf8; /* Blue accent for "Blauer Schwan" */
     }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 40px 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Background Glows */
+    .bg-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      z-index: -1;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .bg-glow.orange { top: -10%; left: -10%; width: 500px; height: 500px; background: rgba(249, 115, 22, 0.25); }
+    .bg-glow.blue { bottom: -10%; right: -10%; width: 600px; height: 600px; background: rgba(56, 189, 248, 0.15); }
 
     .layout {
       display: flex;
-      gap: 48px;
-      max-width: 1200px;
+      gap: 60px;
+      max-width: 1300px;
       margin: 0 auto;
       align-items: flex-start;
     }
 
-    /* Left column – QR */
-    .qr-col { flex: 0 0 220px; text-align: center; }
+    /* Left column – QR Glass Card */
+    .qr-col { 
+      flex: 0 0 280px; 
+      text-align: center; 
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: sticky;
+      top: 40px;
+    }
     .qr-col .qr-label {
-      font-size: 0.78rem; color: #888; text-transform: uppercase;
-      letter-spacing: 0.08em; margin-bottom: 14px;
+      font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.15em; margin-bottom: 20px; font-weight: 600;
     }
-    .qr-col img {
-      width: 200px; height: 200px; border-radius: 12px;
-      border: 3px solid #f97316; display: block; margin: 0 auto;
+    .qr-col img.qr-img {
+      width: 100%; max-width: 200px; height: auto; border-radius: 16px;
+      border: 2px solid rgba(249, 115, 22, 0.6); 
+      box-shadow: 0 0 20px var(--primary-glow);
+      display: block; margin: 0 auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .qr-col .scan-text { margin-top: 12px; font-size: 0.9rem; color: #f97316; font-weight: 700; }
-    .qr-col .url-text { margin-top: 6px; font-size: 0.68rem; color: #999; word-break: break-all; }
+    .qr-col img.qr-img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(249, 115, 22, 0.5);
+    }
+    .qr-col .scan-text { 
+      margin-top: 20px; font-size: 1.05rem; color: var(--primary); 
+      font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--primary-glow); }
+      50% { opacity: 0.6; text-shadow: none; }
+    }
+    .qr-col .url-text { 
+      margin-top: 12px; font-size: 0.75rem; color: var(--text-muted); 
+      word-break: break-all; font-family: monospace;
+      background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .sponsor-img {
+      width: 100%; max-width: 200px; aspect-ratio: 1/1; object-fit: cover;
+      border-radius: 16px; border: 1px solid var(--border-color);
+      display: block; margin: 0 auto; transition: transform 0.3s ease;
+    }
+    .sponsor-img:hover { transform: scale(1.05); }
 
     /* Right column – Leaderboard */
-    .board-col { flex: 1; }
-    .board-col .logo { font-size: 1rem; font-weight: 800; color: #f97316; margin-bottom: 4px; }
-    .board-col h1 { font-size: 2rem; color: #111; margin-bottom: 4px; font-weight: 800; }
-    .board-col .subtitle { font-size: 0.85rem; color: #888; margin-bottom: 28px; }
+    .board-col { flex: 1; min-width: 0; }
+    .board-col .logo { 
+      display: inline-block; font-size: 0.85rem; font-weight: 800; 
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary); 
+      background: rgba(249, 115, 22, 0.1); padding: 6px 16px; 
+      border-radius: 20px; margin-bottom: 16px; border: 1px solid rgba(249, 115, 22, 0.2);
+    }
+    .board-col h1 { 
+      font-size: 3.5rem; color: var(--text-main); margin-bottom: 8px; 
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+    }
+    .board-col .subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; font-weight: 500; }
 
     /* Level section */
-    .level-section { margin-bottom: 32px; }
+    .level-section { margin-bottom: 48px; }
     .level-section-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #e5e5e5;
+      display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
     }
     .level-section-badge {
-      background: #f97316;
-      color: #fff;
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), #c2410c);
+      color: #fff; font-size: 0.85rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.05em; padding: 6px 16px; border-radius: 8px;
+      box-shadow: 0 4px 12px var(--primary-glow);
     }
-    .level-section-label { font-size: 0.85rem; color: #555; }
+    .level-section-label { font-size: 1.1rem; color: var(--text-main); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;}
 
-    .empty-msg { color: #bbb; font-size: 1rem; padding: 20px 0; }
+    .empty-msg { 
+      background: rgba(255,255,255,0.02); border: 1px dashed var(--border-color);
+      border-radius: 16px; color: var(--text-muted); font-size: 1.1rem;
+      padding: 60px 20px; text-align: center; font-weight: 500;
+    }
 
-    table { width: 100%; border-collapse: collapse; }
+    /* Table Styles */
+    table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px; }
     thead th {
-      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
-      color: #888; text-align: left; padding: 0 12px 10px 12px;
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: #71717a; text-align: left; padding: 12px 20px; border-bottom: 1px solid var(--border-color);
     }
-    tbody tr { border-top: 1px solid #e5e5e5; transition: background 0.15s; }
-    tbody tr:first-child { border-top: none; }
-    tbody tr:hover { background: #f9f9f9; }
-    tbody td { padding: 13px 12px; font-size: 1rem; vertical-align: middle; }
+    
+    tbody tr { 
+      background: rgba(255, 255, 255, 0.02); 
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      animation: slideIn 0.4s ease forwards;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+    
+    /* Staggered row animation */
+    tbody tr:nth-child(1) { animation-delay: 0.05s; }
+    tbody tr:nth-child(2) { animation-delay: 0.10s; }
+    tbody tr:nth-child(3) { animation-delay: 0.15s; }
+    tbody tr:nth-child(4) { animation-delay: 0.20s; }
+    tbody tr:nth-child(n+5) { animation-delay: 0.25s; }
 
-    .rank-cell { font-size: 1.4rem; font-weight: 800; width: 52px; color: #ccc; }
-    .rank-1 { color: #f97316; }
-    .rank-2 { color: #b0b0b0; }
-    .rank-3 { color: #cd7f32; }
+    tbody tr:hover { 
+      background: rgba(249, 115, 22, 0.05); 
+      transform: scale(1.01) translateY(-2px); 
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+    
+    tbody td { 
+      padding: 20px; font-size: 1.05rem; vertical-align: middle; 
+      border-top: 1px solid rgba(255,255,255,0.03); 
+      border-bottom: 1px solid rgba(255,255,255,0.03); 
+    }
+    tbody td:first-child { 
+      border-left: 1px solid rgba(255,255,255,0.03); 
+      border-top-left-radius: 16px; border-bottom-left-radius: 16px; 
+    }
+    tbody td:last-child { 
+      border-right: 1px solid rgba(255,255,255,0.03); 
+      border-top-right-radius: 16px; border-bottom-right-radius: 16px; 
+    }
 
-    .username-cell { font-weight: 700; color: #111; font-size: 1.05rem; }
-    .org-cell { font-size: 0.9rem; color: #888; }
-    .tokens-cell { text-align: right; font-size: 1rem; color: #f97316; font-weight: 700; }
-    .tokens-cell .unit { font-size: 0.72rem; color: #999; font-weight: 400; margin-left: 4px; }
-    .time-cell { text-align: right; font-size: 0.9rem; color: #888; font-weight: 500; }
+    .rank-cell { font-size: 1.5rem; font-weight: 800; width: 60px; color: #52525b; text-align: center; }
+    .rank-1 { color: #fbbf24; text-shadow: 0 0 15px rgba(251,191,36,0.5); font-size: 1.8rem; }
+    .rank-2 { color: #e4e4e7; text-shadow: 0 0 15px rgba(228,228,231,0.5); font-size: 1.7rem;}
+    .rank-3 { color: #d97706; text-shadow: 0 0 15px rgba(217,119,6,0.5); font-size: 1.6rem;}
 
-    .last-updated { margin-top: 24px; font-size: 0.72rem; color: #bbb; }
+    .username-cell { font-weight: 700; color: var(--text-main); font-size: 1.15rem; letter-spacing: -0.01em; }
+    .org-cell { font-size: 0.95rem; color: var(--text-muted); font-weight: 500;}
+    
+    .tokens-cell { text-align: right; font-size: 1.25rem; color: var(--primary); font-weight: 800; }
+    .tokens-cell .unit { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-left: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .time-cell { text-align: right; font-size: 1rem; color: var(--text-muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .last-updated { 
+      margin-top: 32px; font-size: 0.85rem; color: #71717a; text-align: right; 
+      font-family: monospace; display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+    }
+    .last-updated::before {
+      content: ''; display: inline-block; width: 8px; height: 8px;
+      background: #10b981; border-radius: 50%; box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    /* Responsive adjustments */
+    @media (max-width: 960px) {
+      .layout { flex-direction: column; align-items: stretch; gap: 40px; }
+      .qr-col { position: static; width: 100%; max-width: 400px; margin: 0 auto; }
+      .board-col h1 { font-size: 2.5rem; }
+      table { display: block; overflow-x: auto; white-space: nowrap; }
+    }
   </style>
 </head>
 <body>
+  
+  <!-- Ambient background effects -->
+  <div class="bg-glow orange"></div>
+  <div class="bg-glow blue"></div>
+
   <div class="layout">
 
     <!-- QR Code column -->
     <div class="qr-col">
       <div class="qr-label">Scan to play</div>
-      <img src="/static/qrcode.png" alt="QR Code" />
+      <img src="/static/qrcode.png" alt="QR Code" class="qr-img" />
       <div class="scan-text">Join the game!</div>
       <div class="url-text">{{ register_url }}</div>
-      <div style="margin-top:28px;">
-        <img src="/static/thws.jpg" alt="CAIRO & TTZ-WUE" style="width:200px;height:200px;object-fit:cover;border-radius:12px;border:3px solid #e5e5e5;display:block;margin:0 auto;" />
-        <div class="scan-text" style="margin-top:12px;">Powered by CAIRO &amp; TTZ-WUE</div>
+      <div style="margin-top:40px;">
+        <img src="/static/thws.jpg" alt="CAIRO & TTZ-WUE" class="sponsor-img" />
+        <div class="scan-text" style="margin-top:16px; font-size: 0.85rem;">Powered by CAIRO &amp; TTZ-WUE</div>
       </div>
     </div>
 
@@ -123,7 +256,7 @@
               <table>
                 <thead>
                   <tr>
-                    <th>#</th>
+                    <th style="text-align:center">Rank</th>
                     <th>Player</th>
                     <th>Firma / Organisation</th>
                     <th style="text-align:right">Avg Tokens</th>
@@ -133,7 +266,7 @@
                 <tbody>
                   {% for row in section_entries %}
                   <tr>
-                    <td class="rank-cell rank-{{ row.rank }}">{{ row.rank }}</td>
+                    <td class="rank-cell rank-{{ row.rank }}">#{{ row.rank }}</td>
                     <td class="username-cell">{{ row.username }}</td>
                     <td class="org-cell">{{ row.organisation or '—' }}</td>
                     <td class="tokens-cell">{{ row.best_avg_tokens }}<span class="unit">tokens</span></td>
@@ -146,7 +279,7 @@
             {% endif %}
           {% endfor %}
         {% else %}
-          <div class="empty-msg">No exact matches yet. Be the first!</div>
+          <div class="empty-msg">No exact matches yet. Be the first to conquer the challenge!</div>
         {% endif %}
       </div>
 
@@ -172,8 +305,8 @@
         const container = document.getElementById("board-container");
 
         if (!data || data.length === 0) {
-          container.innerHTML = '<div class="empty-msg">No exact matches yet. Be the first!</div>';
-          document.getElementById("last-updated").textContent = "Last updated: " + new Date().toLocaleTimeString();
+          container.innerHTML = '<div class="empty-msg">No exact matches yet. Be the first to conquer the challenge!</div>';
+          document.getElementById("last-updated").textContent = "Live sync active • Last updated: " + new Date().toLocaleTimeString();
           return;
         }
 
@@ -189,14 +322,16 @@
               </div>
               <table>
                 <thead><tr>
-                  <th>#</th><th>Player</th><th>Firma / Organisation</th>
+                  <th style="text-align:center">Rank</th>
+                  <th>Player</th>
+                  <th>Firma / Organisation</th>
                   <th style="text-align:right">Avg Tokens</th>
                   <th style="text-align:right">Avg Time</th>
                 </tr></thead>
                 <tbody>
                   ${entries.map(row => `
                     <tr>
-                      <td class="rank-cell rank-${row.rank}">${row.rank}</td>
+                      <td class="rank-cell rank-${row.rank}">#${row.rank}</td>
                       <td class="username-cell">${escapeHtml(row.username)}</td>
                       <td class="org-cell">${row.organisation ? escapeHtml(row.organisation) : "—"}</td>
                       <td class="tokens-cell">${row.best_avg_tokens}<span class="unit">tokens</span></td>
@@ -209,7 +344,7 @@
           `;
         }
         container.innerHTML = html;
-        document.getElementById("last-updated").textContent = "Last updated: " + new Date().toLocaleTimeString();
+        document.getElementById("last-updated").textContent = "Live sync active • Last updated: " + new Date().toLocaleTimeString();
       } catch (e) {
         // silently retry
       }
@@ -222,7 +357,7 @@
     }
 
     setInterval(refresh, 5000);
-    document.getElementById("last-updated").textContent = "Last updated: " + new Date().toLocaleTimeString();
+    document.getElementById("last-updated").textContent = "Live sync active • Last updated: " + new Date().toLocaleTimeString();
   </script>
 </body>
 </html>

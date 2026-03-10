@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project ERIC – Blauer Schwan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --bg-card: rgba(24, 24, 27, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #fafafa;
+      --muted: #a1a1aa;
+      --orange: #f97316;
+      --orange-dim: rgba(249, 115, 22, 0.15);
+      --orange-glow: rgba(249, 115, 22, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      overflow-x: hidden;
+    }
+
+    /* Ambient glows */
+    .glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-1 { top: -15%; left: -10%; width: 500px; height: 500px; background: rgba(249, 115, 22, 0.18); }
+    .glow-2 { bottom: -15%; right: -10%; width: 600px; height: 600px; background: rgba(56, 189, 248, 0.1); }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 740px;
+      width: 100%;
+    }
+
+    /* Top badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--orange-dim);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      animation: blink 2.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+
+    /* Headline */
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    h1 .project { color: var(--orange); }
+
+    .tagline {
+      font-size: 1.15rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 44px;
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    /* Body card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 40px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+      margin-bottom: 36px;
+    }
+
+    .card p {
+      font-size: 1.05rem;
+      color: #d4d4d8;
+      line-height: 1.85;
+      font-weight: 400;
+    }
+
+    .card p + p {
+      margin-top: 20px;
+    }
+
+    .card p strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* CTA */
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 16px 36px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px var(--orange-glow);
+      letter-spacing: -0.01em;
+    }
+
+    .cta:hover {
+      background: #ea580c;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(249, 115, 22, 0.45);
+    }
+
+    .cta:active { transform: translateY(0); }
+
+    .cta .arrow {
+      font-size: 1.2rem;
+      transition: transform 0.2s;
+    }
+
+    .cta:hover .arrow { transform: translateX(4px); }
+
+    /* Footer note */
+    .foot-note {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #3f3f46;
+    }
+  </style>
+</head>
+<body>
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+
+  <div class="container">
+    <div class="badge">Project ERIC · Blauer Schwan Challenge</div>
+
+    <h1>A Game About<br><span class="project">Tokenization</span></h1>
+    <p class="tagline">
+      Can you control what a language model says — using as few words as possible?
+    </p>
+
+    <div class="card">
+      <p>
+        <strong>Tokenization</strong> is one of the most fundamental yet often overlooked components of large language models.
+        The way text is split into tokens directly affects model efficiency, memory usage, and performance.
+        This becomes especially important for applications such as coding assistants, on-device LLMs, or systems working
+        with less common programming or natural languages.
+      </p>
+      <p>
+        <strong>ERIC</strong> is a project supported by <strong>JetBrains Research</strong>.
+        We are improving tokenization algorithms and adapting tokenizers for new domains and languages.
+      </p>
+      <p>
+        To make this concept tangible, we created a small experimental game. The game challenges you to prompt a language
+        model to produce a specific phrase consisting of predefined tokens. However, there is a twist: you are not allowed
+        to use any of the words contained in that phrase. Instead, you must describe the desired output indirectly while
+        using <strong>as little text as possible</strong>.
+      </p>
+      <p>
+        This seemingly simple task quickly turns into a non-trivial puzzle. You will discover that controlling the
+        token-level behavior of a language model is much harder than expected, and that the choice of words in the prompt
+        strongly interacts with the model's internal tokenization.
+      </p>
+      <p>
+        By turning tokenizer mechanics into a game, we offer an intuitive way to explore how language models process text
+        and why tokenization design matters for real-world AI systems.
+      </p>
+    </div>
+
+    <a href="/how-to-win" class="cta">
+      Enjoy the game <span class="arrow">→</span>
+    </a>
+
+    <div class="foot-note">Good luck — and may your prompts be efficient.</div>
+  </div>
+</body>
+</html>

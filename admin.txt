@@ -42,13 +42,17 @@ Its the basic version. where players can play only using local machine, that is 
 # local_host branch
 code is written such a way that server connection only works if the laptop's hotspot is turned on 
 
-Tasks to be done 
-more rules:
+Tasks to be done:
 
+0. look if it breaks if more players come, look how many players will show max.
+1. leaderborad showing fewer tokens wins the game but maybe bigger so that they get it.
+also make while registering or in landing page that goal is to use less token.
+2. Example give first.
 
+3. to prevent using screenshot and use chatgpt  use picture to fill in the words between.
 
-1. change to server stops at 14 Uhr.  admin can change that push that to new git branch. 
-0. add readme , turn current readme for only readable by admin.
+2. dont show which model is used?
+
 2. add whats the game before going to (landing page)
 1. change the font on leaderboard into white ui
 6. more closer means cosine distance calc need to be done. better maybe blue score ngram overlap because "The cat sat on the mat" vs "The feline rested on the rug" → very high score in semantic similarity which we dont want.

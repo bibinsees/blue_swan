@@ -71,9 +71,19 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-# ── Registration ───────────────────────────────────────────────────────────────
+# ── Landing & onboarding ───────────────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
+async def home_page(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
+
+
+@app.get("/how-to-win", response_class=HTMLResponse)
+async def how_to_win_page(request: Request):
+    return templates.TemplateResponse("how_to_win.html", {"request": request})
+
+
+@app.get("/register", response_class=HTMLResponse)
 async def register_page(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 

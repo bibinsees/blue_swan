@@ -89,6 +89,13 @@
     }
     button:hover { background: #ea580c; }
     button:active { background: #c2410c; }
+
+    @media (max-width: 480px) {
+      body { padding: 16px; align-items: flex-start; padding-top: 40px; }
+      .card { padding: 28px 20px; }
+      input { font-size: 1rem; } /* prevent iOS auto-zoom */
+      button { padding: 16px; font-size: 1rem; }
+    }
   </style>
 </head>
 <body>

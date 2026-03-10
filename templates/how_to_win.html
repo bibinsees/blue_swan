@@ -293,6 +293,20 @@
       font-size: 0.8rem;
       color: #3f3f46;
     }
+
+    @media (max-width: 600px) {
+      body { padding: 28px 16px; }
+      .step-card { padding: 18px 16px; gap: 14px; }
+      .step-num { width: 32px; height: 32px; font-size: 0.82rem; }
+      .step-body h3 { font-size: 0.95rem; }
+      .step-body p { font-size: 0.88rem; }
+      .ex-tag { flex: 0 0 68px; font-size: 0.62rem; padding: 4px 6px; }
+      .ex-text { font-size: 0.87rem; }
+      .ex-row { padding: 14px 16px; gap: 12px; }
+      .cta-row { flex-direction: column; align-items: stretch; }
+      .cta { width: 100%; justify-content: center; padding: 15px 24px; }
+      .hint { text-align: center; }
+    }
   </style>
 </head>
 <body>
@@ -337,7 +351,7 @@
       <div class="example-card">
         <div class="ex-row">
           <span class="ex-tag target">Target</span>
-          <span class="ex-text">"Blue Schwan fliegt von Neuschwanstein nach Schweinfurt"</span>
+          <span class="ex-text">"Blue Schwan fliegt von Neuschwanstein nach Schweinfurt."</span>
         </div>
         <div class="ex-row">
           <span class="ex-tag prompt">Your prompt</span>

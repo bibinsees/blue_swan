@@ -133,7 +133,7 @@
 
     textarea {
       width: 100%; min-height: 100px; background: #fff; border: 1px solid #ddd;
-      border-radius: 8px; color: #111; font-size: 0.95rem; padding: 12px 14px;
+      border-radius: 8px; color: #111; font-size: 1rem; padding: 12px 14px;
       resize: vertical; outline: none; font-family: sans-serif; line-height: 1.5;
       transition: border-color 0.15s;
     }
@@ -181,6 +181,40 @@
     .warning-msg {
       background: #fff7ed; border: 1px solid #fed7aa; color: #ea580c;
       padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; display: none;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 14px; }
+
+      .header {
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .header h1 { font-size: 1.1rem; }
+      .header > div { gap: 10px; flex-wrap: wrap; }
+      .header .player-info { font-size: 0.75rem; }
+
+      .level-indicator { margin-bottom: 12px; }
+
+      .target-box { padding: 14px 16px; margin-bottom: 14px; }
+      .target-box .sentence { font-size: 1rem; }
+
+      .rules-box { padding: 12px 14px; margin-bottom: 14px; }
+
+      .attempts-section h2 { font-size: 0.72rem; }
+      .attempt-card { padding: 14px 12px; }
+      .attempt-row .row-value { font-size: 0.82rem; padding: 7px 10px; }
+
+      .prompt-section { margin-top: 16px; }
+      textarea {
+        font-size: 1rem; /* prevent iOS auto-zoom */
+        min-height: 90px;
+        padding: 12px;
+      }
+      button#submit-btn { padding: 15px; font-size: 1rem; margin-top: 10px; }
+      .skip-btn { padding: 13px; font-size: 0.88rem; }
+      .next-level-btn { padding: 15px 24px; font-size: 1rem; }
     }
   </style>
 </head>
@@ -241,12 +275,6 @@
           <div class="row-label">Input Tokens</div>
           <div><span class="tokens-badge">{{ a.input_tokens }} tokens</span></div>
         </div>
-        {% if a.model_used %}
-        <div class="attempt-row">
-          <div class="row-label">Model</div>
-          <div><span class="model-badge">{{ a.model_used }}</span></div>
-        </div>
-        {% endif %}
       </div>
       {% endfor %}
     </div>
@@ -291,11 +319,10 @@
       <div class="attempts-counter">
         Attempts remaining: <span id="remaining-count">{{ remaining }}</span> / {{ max_attempts }}
       </div>
-      <div class="model-indicator">Model: <span id="model-name">{{ current_model }}</span></div>
       <textarea id="prompt-input" placeholder="Type your prompt here…"></textarea>
       <div class="warning-msg" id="warning-msg"></div>
       <div class="error-msg" id="error-msg"></div>
-      <div class="spinner" id="spinner">Sending to <span id="spinner-model">{{ current_model }}</span>…</div>
+      <div class="spinner" id="spinner">Sending…</div>
       <button id="submit-btn">Submit Prompt</button>
       {% if has_next_level %}
       <button id="skip-btn" class="skip-btn {% if has_exact_match %}visible{% endif %}" onclick="skipLevel()">
@@ -378,15 +405,7 @@
               <div class="row-label">Input Tokens</div>
               <div><span class="tokens-badge">${data.input_tokens} tokens</span></div>
             </div>
-            <div class="attempt-row">
-              <div class="row-label">Model</div>
-              <div><span class="model-badge">${escapeHtml(data.model_used)}</span></div>
-            </div>
           `;
-          const modelName = document.getElementById("model-name");
-          const spinnerModel = document.getElementById("spinner-model");
-          if (modelName) modelName.textContent = data.model_used;
-          if (spinnerModel) spinnerModel.textContent = data.model_used;
           attemptsList.appendChild(card);
           card.scrollIntoView({ behavior: "smooth", block: "start" });
           promptInput.value = "";

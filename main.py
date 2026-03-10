@@ -21,7 +21,7 @@ from database import (
     get_game_duration, get_leaderboard, get_level_constraints,
     get_levels, get_max_attempts, get_max_input_tokens, get_model,
     get_player_attempts_for_level, get_player_by_id, get_player_by_username,
-    get_player_current_level, get_player_level_started_at,
+    get_player_current_level,
     player_has_exact_match_for_level,
     remove_level, remove_level_constraint, update_level_sentence,
     set_game_duration, set_max_attempts, set_max_input_tokens, set_model,
@@ -137,10 +137,10 @@ async def game_page(request: Request, player_id: int):
     has_exact_match = player_has_exact_match_for_level(player_id, level_id)
     all_attempts_used = attempts_used >= max_attempts
 
-    # Time remaining for this level
+    # Time remaining for entire game (starts when player registered)
     duration = get_game_duration()
-    level_started_at = get_player_level_started_at(player_id, level_id) or player["created_at"]
-    elapsed = int((datetime.now(timezone.utc) - datetime.fromisoformat(level_started_at)).total_seconds())
+    game_started_at = player["created_at"]
+    elapsed = int((datetime.now(timezone.utc) - datetime.fromisoformat(game_started_at)).total_seconds())
     time_remaining = max(0, duration - elapsed)
 
     return templates.TemplateResponse(
@@ -215,10 +215,10 @@ async def make_attempt(
     if len(attempts) >= get_max_attempts():
         return JSONResponse({"error": "Maximum attempts reached."}, status_code=400)
 
-    # Time limit check
+    # Time limit check (entire game duration from registration)
     duration = get_game_duration()
-    level_started_at = get_player_level_started_at(player_id, level_id) or player["created_at"]
-    elapsed = int((datetime.now(timezone.utc) - datetime.fromisoformat(level_started_at)).total_seconds())
+    game_started_at = player["created_at"]
+    elapsed = int((datetime.now(timezone.utc) - datetime.fromisoformat(game_started_at)).total_seconds())
     if elapsed > duration:
         return JSONResponse({"error": "Time's up! Your game session has ended."}, status_code=400)
 
@@ -265,7 +265,7 @@ async def make_attempt(
     time_seconds = None
     if is_exact_match:
         try:
-            start = datetime.fromisoformat(level_started_at)
+            start = datetime.fromisoformat(game_started_at)
             time_seconds = max(0, int((now - start).total_seconds()))
         except Exception:
             time_seconds = 0

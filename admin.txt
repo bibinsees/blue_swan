@@ -44,16 +44,9 @@ code is written such a way that server connection only works if the laptop's hot
 
 Tasks to be done:
 
-0. look if it breaks if more players come, look how many players will show max.
-1. leaderborad showing fewer tokens wins the game but maybe bigger so that they get it.
-also make while registering or in landing page that goal is to use less token.
-2. Example give first.
 
 3. to prevent using screenshot and use chatgpt  use picture to fill in the words between.
 
-2. dont show which model is used?
-
-2. add whats the game before going to (landing page)
 1. change the font on leaderboard into white ui
 6. more closer means cosine distance calc need to be done. better maybe blue score ngram overlap because "The cat sat on the mat" vs "The feline rested on the rug" → very high score in semantic similarity which we dont want.
 8. multiturn instead of single turn
@@ -69,3 +62,5 @@ also make while registering or in landing page that goal is to use less token.
 
 # input tokens calculated by  input_tokens = response.usage.prompt_tokens
 09.30 Uhr bis ca. 14.00 Uhr = 4.30 hours
+
+Game duration per level (s) change made after the  git commit -m "added retrieve data" in dark modern ui branch.

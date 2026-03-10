@@ -250,6 +250,7 @@ async def make_attempt(
     )
 
     attempts_remaining = get_max_attempts() - attempt_number
+    has_any_exact_match = player_has_exact_match_for_level(player_id, level_id)
 
     time_seconds = None
     if is_exact_match:
@@ -263,6 +264,7 @@ async def make_attempt(
         "llm_response": llm_response,
         "input_tokens": input_tokens,
         "is_exact_match": is_exact_match,
+        "has_any_exact_match": has_any_exact_match,
         "attempt_number": attempt_number,
         "attempts_remaining": attempts_remaining,
         "model_used": model_used,

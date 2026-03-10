@@ -161,6 +161,15 @@
     }
     .next-level-btn:hover { background: #ea580c; }
 
+    .skip-btn {
+      display: none; width: 100%; margin-top: 10px; padding: 11px;
+      background: #fff; color: #f97316; border: 2px solid #f97316;
+      border-radius: 8px; font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s, color 0.15s;
+    }
+    .skip-btn:hover { background: #fff7ed; }
+    .skip-btn.visible { display: block; }
+
     .spinner {
       display: none; text-align: center; color: #bbb; font-size: 0.85rem; margin-top: 10px;
     }
@@ -179,7 +188,13 @@
 
   <div class="header">
     <h1>Blue Schwan</h1>
-    <div class="player-info">Playing as: <strong>{{ player.username }}</strong></div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <a href="{{ leaderboard_url }}" target="_blank"
+         style="font-size:0.8rem;font-weight:700;color:#f97316;text-decoration:none;border:1px solid #fed7aa;background:#fff7ed;padding:5px 12px;border-radius:20px;">
+        Leaderboard ↗
+      </a>
+      <div class="player-info">Playing as: <strong>{{ player.username }}</strong></div>
+    </div>
   </div>
 
   <div class="level-indicator">
@@ -282,6 +297,11 @@
       <div class="error-msg" id="error-msg"></div>
       <div class="spinner" id="spinner">Sending to <span id="spinner-model">{{ current_model }}</span>…</div>
       <button id="submit-btn">Submit Prompt</button>
+      {% if has_next_level %}
+      <button id="skip-btn" class="skip-btn {% if has_exact_match %}visible{% endif %}" onclick="skipLevel()">
+        Skip to Level {{ level_number + 1 }} →
+      </button>
+      {% endif %}
     {% endif %}
 
   </div>
@@ -380,6 +400,9 @@
               banner.textContent = `Exact match${timeStr}! Keep going — fewer tokens wins.`;
               banner.style.display = "block";
             }
+            // Show skip button on first exact match
+            const skipBtn = document.getElementById("skip-btn");
+            if (skipBtn && HAS_NEXT_LEVEL) skipBtn.classList.add("visible");
           } else {
             if (banner) banner.style.display = "none";
           }
@@ -391,7 +414,7 @@
           } else {
             // All attempts used — replace prompt section
             const section = document.querySelector(".prompt-section");
-            if (data.is_exact_match) {
+            if (data.has_any_exact_match) {
               const nextLevelHtml = HAS_NEXT_LEVEL
                 ? `<form method="POST" action="/game/${PLAYER_ID}/next-level">
                      <button type="submit" class="next-level-btn">Proceed to Level ${LEVEL_NUMBER + 1} →</button>
@@ -450,6 +473,15 @@
         }, secsLeft * 1000);
       }
     })();
+
+    function skipLevel() {
+      if (!confirm("Are you sure?\n\nYou will lose all remaining attempts — you won't be able to try for fewer tokens on this level.")) return;
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = `/game/${PLAYER_ID}/next-level`;
+      document.body.appendChild(form);
+      form.submit();
+    }
 
     function escapeHtml(str) {
       return str

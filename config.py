@@ -5,9 +5,9 @@ load_dotenv()
 
 TARGET_SENTENCE = "Blue Schwan fliegt von Neuschwanstein nach Schweinfurt."
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-MAX_ATTEMPTS = 5
-MAX_INPUT_TOKENS = 300
-GAME_DURATION_SECONDS = 360  # 6 minutes per player
+MAX_ATTEMPTS = 10
+MAX_INPUT_TOKENS = 500
+GAME_DURATION_SECONDS = 1200  # 10 minutes per player
 MODEL = "gpt-4o-mini"
 PORT = 8000
 HOST_IP = os.getenv("HOST_IP", "")

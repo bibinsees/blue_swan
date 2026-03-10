@@ -30,11 +30,11 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      padding: 40px 24px 60px;
+      overflow-x: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 24px;
-      overflow-x: hidden;
     }
 
     .glow {
@@ -71,6 +71,10 @@
     /* Page header */
     .page-header {
       margin-bottom: 36px;
+    }
+    
+    .page-header h1 {
+      color: var(--orange);
     }
 
     .step-label {
@@ -153,11 +157,11 @@
     }
 
     .section-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-transform: none;
+      color: var(--text);
       margin-bottom: 16px;
     }
 
@@ -172,10 +176,10 @@
     .ex-row {
       display: flex;
       gap: 0;
-      padding: 18px 24px;
+      padding: 24px;
       border-bottom: 1px solid var(--border);
       align-items: flex-start;
-      gap: 16px;
+      gap: 20px;
     }
 
     .ex-row:last-child { border-bottom: none; }
@@ -188,7 +192,7 @@
       text-transform: uppercase;
       padding: 4px 10px;
       border-radius: 6px;
-      margin-top: 2px;
+      margin-top: 4px;
       text-align: center;
     }
 
@@ -211,11 +215,17 @@
     }
 
     .ex-text {
-      font-size: 0.93rem;
-      color: #d4d4d8;
-      line-height: 1.65;
+      font-size: clamp(1.25rem, 3vw, 1.75rem); 
+      font-weight: 700; 
+      letter-spacing: -0.02em; 
+      line-height: 1.4; 
       font-style: italic;
     }
+
+    /* Colored text variants to match tags */
+    .text-target { color: #a5b4fc; } 
+    .text-prompt { color: #fdba74; } 
+    .text-answer { color: #86efac; } 
 
     /* Scoring note */
     .scoring-card {
@@ -262,7 +272,7 @@
       gap: 10px;
       background: var(--orange);
       color: #fff;
-      font-size: 1.05rem;
+      font-size: clamp(2rem, 5vw, 3rem);
       font-weight: 800;
       padding: 16px 36px;
       border-radius: 12px;
@@ -295,16 +305,13 @@
     }
 
     @media (max-width: 600px) {
-      body { padding: 28px 16px; }
-      .step-card { padding: 18px 16px; gap: 14px; }
-      .step-num { width: 32px; height: 32px; font-size: 0.82rem; }
-      .step-body h3 { font-size: 0.95rem; }
-      .step-body p { font-size: 0.88rem; }
-      .ex-tag { flex: 0 0 68px; font-size: 0.62rem; padding: 4px 6px; }
-      .ex-text { font-size: 0.87rem; }
-      .ex-row { padding: 14px 16px; gap: 12px; }
+      body { padding: 28px 20px 40px; }
+      .step-card { padding: 22px 20px; gap: 16px; }
+      .step-num { width: 42px; height: 42px; font-size: 1.1rem; flex-shrink: 0; }
+      .ex-tag { flex: 0 0 80px; font-size: 0.7rem; padding: 6px 8px; }
+      .ex-row { padding: 18px 16px; gap: 14px; }
       .cta-row { flex-direction: column; align-items: stretch; }
-      .cta { width: 100%; justify-content: center; padding: 15px 24px; }
+      .cta { width: 100%; justify-content: center; }
       .hint { text-align: center; }
     }
   </style>
@@ -325,22 +332,15 @@
       <div class="step-card">
         <div class="step-num">1</div>
         <div class="step-body">
-          <h3>Get the exact target sentence</h3>
-          <p>
-            Each level has a <strong>target sentence</strong>. Your goal is to prompt the language model
-            so that its response matches that sentence <strong>exactly</strong> — word for word.
-          </p>
+          <h1>Prompt the LLM to output the exact target sentence.</h1>
         </div>
       </div>
 
       <div class="step-card">
         <div class="step-num">2</div>
         <div class="step-body">
-          <h3>Use as few tokens as possible</h3>
-          <p>
-            Everyone who achieves an exact match is ranked. The fewer tokens your prompt uses,
-            the <strong>higher your rank</strong>. Ties are broken by time.
-          </p>
+          <h1>The fewer tokens or words your prompt uses,
+            the higher your rank in leaderboard</h1>
         </div>
       </div>
     </div>
@@ -351,22 +351,22 @@
       <div class="example-card">
         <div class="ex-row">
           <span class="ex-tag target">Target</span>
-          <span class="ex-text">"Blue Schwan fliegt von Neuschwanstein nach Schweinfurt."</span>
+          <span class="ex-text text-target">"Blue Schwan fliegt von Neuschwanstein nach Schweinfurt."</span>
         </div>
         <div class="ex-row">
           <span class="ex-tag prompt">Your prompt</span>
-          <span class="ex-text">"Schreibe einen 7-Wörter-Satz: Ein normalerweise weißer Vogel (jetzt in der Farbe, die mit rot lila ergibt) fliegt von einem Schloss mit seinem Namen zum zweiten Standort der Hochschule Würzburg; sonst Deutsch."</span>
+          <span class="ex-text text-prompt">"Schreibe einen 7-Wörter-Satz: Ein normalerweise weißer Vogel (jetzt in der Farbe, die mit rot lila ergibt) fliegt von einem Schloss mit seinem Namen zum zweiten Standort der Hochschule Würzburg; sonst Deutsch."</span>
         </div>
         <div class="ex-row">
-          <span class="ex-tag answer">Answer</span>
-          <span class="ex-text">"Blue Schwan fliegt von Neuschwanstein nach Schweinfurt."</span>
+          <span class="ex-tag answer">LLM response</span>
+          <span class="ex-text text-answer">"Blue Schwan fliegt von Neuschwanstein nach Schweinfurt."</span>
         </div>
       </div>
     </div>
 
     <div class="cta-row">
       <a href="/register" class="cta">
-        Be ready <span class="arrow">→</span>
+        Join the challenge <span class="arrow">→</span>
       </a>
       <div class="hint">Takes 10 seconds to register.</div>
     </div>
